@@ -5,5 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Cart.Query.Domain\Cart.Query.Domain.csproj" />
+  </ItemGroup>
 
 </Project>
