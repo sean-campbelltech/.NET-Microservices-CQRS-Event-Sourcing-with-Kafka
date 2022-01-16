@@ -9,7 +9,7 @@ namespace Post.Query.Domain.Entities
         [Key]
         public string PostId { get; set; }
         public string Author { get; set; }
-        public DateTime TimeStamp { get; set; }
+        public DateTime DatePosted { get; set; }
         public string Message { get; set; }
         public int Likes { get; set; }
         public ICollection<CommentEntity>? Comments { get; set; }

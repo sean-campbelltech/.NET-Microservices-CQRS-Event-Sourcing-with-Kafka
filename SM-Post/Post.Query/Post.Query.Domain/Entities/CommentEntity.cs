@@ -6,7 +6,7 @@ namespace Post.Query.Domain.Entities
     {
         public int CommentId { get; set; }
         public string Username { get; set; }
-        public DateTime TimeStamp { get; set; }
+        public DateTime CommentDate { get; set; }
         public string Comment { get; set; }
 
         [ForeignKey("PostId")]
