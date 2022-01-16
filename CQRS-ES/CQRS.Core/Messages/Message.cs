@@ -2,7 +2,7 @@ namespace CQRS.Core.Messages
 {
     public class Message
     {
-        public Message(string id)
+        protected Message(string id)
         {
             this.Id = id;
         }

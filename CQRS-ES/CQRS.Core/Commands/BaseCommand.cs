@@ -4,7 +4,7 @@ namespace CQRS.Core.Commands
 {
     public abstract class BaseCommand : Message
     {
-        public BaseCommand(string id) : base(id)
+        protected BaseCommand(string id) : base(id)
         {
         }
     }
