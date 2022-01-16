@@ -4,6 +4,10 @@ namespace Post.Cmd.Api.Commands
 {
     public class DeletePostCommand : BaseCommand
     {
+        public DeletePostCommand()
+        {
+        }
+
         public DeletePostCommand(string id) : base(id)
         {
         }

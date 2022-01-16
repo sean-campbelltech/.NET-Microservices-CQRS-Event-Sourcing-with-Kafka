@@ -4,11 +4,17 @@ namespace Post.Cmd.Api.Commands
 {
     public class AddCommentCommand : BaseCommand
     {
-        public AddCommentCommand(string id, string comment) : base(id)
+        public AddCommentCommand()
         {
-            this.Comment = comment;
         }
 
-        public string Comment;
+        public AddCommentCommand(string id, string comment, string username) : base(id)
+        {
+            this.Comment = comment;
+            this.Username = username;
+        }
+
+        public string Comment { get; set; }
+        public string Username { get; set; }
     }
 }
