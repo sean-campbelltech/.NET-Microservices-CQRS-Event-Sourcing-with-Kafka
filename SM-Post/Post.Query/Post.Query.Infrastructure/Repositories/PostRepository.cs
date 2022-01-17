@@ -20,12 +20,12 @@ namespace Post.Query.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<List<PostEntity>> GetWithComments()
+        public Task<List<PostEntity>> GetWithCommentsAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<PostEntity>> GetWithLikes(int quantity)
+        public Task<List<PostEntity>> GetWithLikesAsync(int quantity)
         {
             throw new NotImplementedException();
         }

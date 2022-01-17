@@ -8,7 +8,7 @@ namespace Post.Cmd.Api.Commands
         {
         }
 
-        public EditMessageCommand(string id, string message) : base(id)
+        public EditMessageCommand(Guid id, string message) : base(id)
         {
             this.Message = message;
         }

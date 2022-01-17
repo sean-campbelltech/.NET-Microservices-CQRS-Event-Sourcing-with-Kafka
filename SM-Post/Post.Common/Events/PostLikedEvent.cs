@@ -8,7 +8,7 @@ namespace Post.Common.Events
         {
         }
 
-        public PostLikedEvent(string id) : base(id)
+        public PostLikedEvent(Guid id) : base(id)
         {
         }
     }

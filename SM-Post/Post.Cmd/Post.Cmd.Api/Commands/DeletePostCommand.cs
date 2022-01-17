@@ -8,7 +8,7 @@ namespace Post.Cmd.Api.Commands
         {
         }
 
-        public DeletePostCommand(string id) : base(id)
+        public DeletePostCommand(Guid id) : base(id)
         {
         }
     }

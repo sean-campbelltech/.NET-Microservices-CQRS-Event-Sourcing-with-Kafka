@@ -6,11 +6,11 @@ namespace CQRS.Core.Messages
         {
         }
 
-        protected Message(string id)
+        protected Message(Guid id)
         {
             this.Id = id;
         }
 
-        public string Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

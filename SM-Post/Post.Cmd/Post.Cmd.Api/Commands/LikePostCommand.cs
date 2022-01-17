@@ -8,7 +8,7 @@ namespace Post.Cmd.Api.Commands
         {
         }
 
-        public LikePostCommand(string id) : base(id)
+        public LikePostCommand(Guid id) : base(id)
         {
         }
     }

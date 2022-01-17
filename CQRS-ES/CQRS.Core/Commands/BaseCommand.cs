@@ -8,7 +8,7 @@ namespace CQRS.Core.Commands
         {
         }
 
-        protected BaseCommand(string id) : base(id)
+        protected BaseCommand(Guid id) : base(id)
         {
         }
     }

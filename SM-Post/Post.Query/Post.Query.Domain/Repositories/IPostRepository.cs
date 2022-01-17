@@ -8,7 +8,7 @@ namespace Post.Query.Domain.Repositories
         Task<bool> UpdateAsync(string postId, PostEntity post);
         Task<PostEntity> GetByIdAsync(string postId);
         Task<List<PostEntity>> GetByAuthorAsync(string author);
-        Task<List<PostEntity>> GetWithLikes(int quantity);
-        Task<List<PostEntity>> GetWithComments();
+        Task<List<PostEntity>> GetWithLikesAsync(int quantity);
+        Task<List<PostEntity>> GetWithCommentsAsync();
     }
 }

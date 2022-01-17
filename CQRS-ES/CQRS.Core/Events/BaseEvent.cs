@@ -8,7 +8,7 @@ namespace CQRS.Core.Events
         {
         }
 
-        protected BaseEvent(string id) : base(id)
+        protected BaseEvent(Guid id) : base(id)
         {
         }
     }

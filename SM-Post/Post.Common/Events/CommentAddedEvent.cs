@@ -8,7 +8,7 @@ namespace Post.Common.Events
         {
         }
 
-        public CommentAddedEvent(string id, string comment, string username, DateTime commentDate) : base(id)
+        public CommentAddedEvent(Guid id, string comment, string username, DateTime commentDate) : base(id)
         {
             this.Comment = comment;
             this.Username = username;

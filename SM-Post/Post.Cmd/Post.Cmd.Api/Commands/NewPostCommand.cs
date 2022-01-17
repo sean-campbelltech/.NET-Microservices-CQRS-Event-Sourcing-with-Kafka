@@ -8,7 +8,7 @@ namespace Post.Cmd.Api.Commands
         {
         }
 
-        public NewPostCommand(string id, string author, string message) : base(id)
+        public NewPostCommand(Guid id, string author, string message) : base(id)
         {
             this.Author = author;
             this.Message = message;

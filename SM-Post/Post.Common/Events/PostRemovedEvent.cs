@@ -8,7 +8,7 @@ namespace Post.Common.Events
         {
         }
 
-        public PostRemovedEvent(string id) : base(id)
+        public PostRemovedEvent(Guid id) : base(id)
         {
         }
     }

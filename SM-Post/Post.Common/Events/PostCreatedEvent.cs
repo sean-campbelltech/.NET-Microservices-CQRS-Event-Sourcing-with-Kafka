@@ -8,7 +8,7 @@ namespace Post.Common.Events
         {
         }
 
-        public PostCreatedEvent(string id, string author, string messsage, DateTime datePosted) : base(id)
+        public PostCreatedEvent(Guid id, string author, string messsage, DateTime datePosted) : base(id)
         {
             this.Author = author;
             this.Message = messsage;

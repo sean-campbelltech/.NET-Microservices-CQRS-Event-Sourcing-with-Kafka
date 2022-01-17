@@ -8,7 +8,7 @@ namespace Post.Cmd.Api.Commands
         {
         }
 
-        public AddCommentCommand(string id, string comment, string username) : base(id)
+        public AddCommentCommand(Guid id, string comment, string username) : base(id)
         {
             this.Comment = comment;
             this.Username = username;
