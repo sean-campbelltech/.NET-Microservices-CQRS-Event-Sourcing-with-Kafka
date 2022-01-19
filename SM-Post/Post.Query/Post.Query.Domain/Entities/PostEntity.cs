@@ -12,6 +12,6 @@ namespace Post.Query.Domain.Entities
         public DateTime DatePosted { get; set; }
         public string Message { get; set; }
         public int Likes { get; set; }
-        public ICollection<CommentEntity>? Comments { get; set; }
+        public List<CommentEntity> Comments { get; set; }
     }
 }

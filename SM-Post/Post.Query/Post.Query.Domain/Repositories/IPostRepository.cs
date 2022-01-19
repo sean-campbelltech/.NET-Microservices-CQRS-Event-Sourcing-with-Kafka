@@ -4,8 +4,9 @@ namespace Post.Query.Domain.Repositories
 {
     public interface IPostRepository
     {
-        Task<bool> CreateAsync(PostEntity post);
-        Task<bool> UpdateAsync(Guid postId, PostEntity post);
+        Task CreateAsync(PostEntity post);
+        Task UpdateAsync(Guid postId, PostEntity post);
+        Task DeleteAsync(Guid postId);
         Task<PostEntity> GetByIdAsync(Guid postId);
         Task<List<PostEntity>> GetByAuthorAsync(string author);
         Task<List<PostEntity>> GetWithLikesAsync(int quantity);

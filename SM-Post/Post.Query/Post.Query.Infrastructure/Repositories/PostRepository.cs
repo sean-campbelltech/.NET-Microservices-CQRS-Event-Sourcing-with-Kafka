@@ -14,13 +14,23 @@ namespace Post.Query.Infrastructure.Repositories
             _contextFactory = contextFactory;
         }
 
-        public async Task<bool> CreateAsync(PostEntity post)
+        public async Task CreateAsync(PostEntity post)
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
             context.Posts.Add(post);
 
-            var result = await context.SaveChangesAsync().ConfigureAwait(false);
-            return result > 0;
+            _ = await context.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        public async Task DeleteAsync(Guid postId)
+        {
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            var post = await GetByIdAsync(postId);
+
+            if (post == null) return;
+
+            context.Posts.Remove(post);
+            _ = await context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task<List<PostEntity>> GetByAuthorAsync(string author)
@@ -59,17 +69,15 @@ namespace Post.Query.Infrastructure.Repositories
                     .ConfigureAwait(false);
         }
 
-        public async Task<bool> UpdateAsync(Guid postId, PostEntity post)
+        public async Task UpdateAsync(Guid postId, PostEntity post)
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
             var persistedPost = await GetByIdAsync(postId);
 
-            if (persistedPost == null) return false;
+            if (persistedPost == null) return;
 
             context.Entry(persistedPost).CurrentValues.SetValues(post);
-            var result = await context.SaveChangesAsync();
-
-            return result > 0;
+            _ = await context.SaveChangesAsync();
         }
     }
 }
