@@ -1,38 +1,75 @@
+using Microsoft.EntityFrameworkCore;
 using Post.Query.Domain.Entities;
 using Post.Query.Domain.Repositories;
+using Post.Query.Infrastructure.DataAccess;
 
 namespace Post.Query.Infrastructure.Repositories
 {
     public class PostRepository : IPostRepository
     {
-        public Task<bool> CreateAsync(PostEntity post)
+        private readonly DatabaseContextFactory _contextFactory;
+
+        public PostRepository(DatabaseContextFactory contextFactory)
         {
-            throw new NotImplementedException();
+            _contextFactory = contextFactory;
         }
 
-        public Task<List<PostEntity>> GetByAuthorAsync(string author)
+        public async Task<bool> CreateAsync(PostEntity post)
         {
-            throw new NotImplementedException();
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            context.Posts.Add(post);
+
+            var result = await context.SaveChangesAsync().ConfigureAwait(false);
+            return result > 0;
         }
 
-        public Task<PostEntity> GetByIdAsync(string postId)
+        public async Task<List<PostEntity>> GetByAuthorAsync(string author)
         {
-            throw new NotImplementedException();
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            return await context.Posts
+                    .Where(x => x.Author.Equals(author))
+                    .ToListAsync()
+                    .ConfigureAwait(false);
         }
 
-        public Task<List<PostEntity>> GetWithCommentsAsync()
+        public async Task<PostEntity> GetByIdAsync(Guid postId)
         {
-            throw new NotImplementedException();
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            return await context.Posts
+                    .Where(x => x.PostId == postId)
+                    .FirstOrDefaultAsync()
+                    .ConfigureAwait(false);
         }
 
-        public Task<List<PostEntity>> GetWithLikesAsync(int quantity)
+        public async Task<List<PostEntity>> GetWithCommentsAsync()
         {
-            throw new NotImplementedException();
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            return await context.Posts
+                    .Where(x => x.Comments != null && x.Comments.Any())
+                    .ToListAsync()
+                    .ConfigureAwait(false);
         }
 
-        public Task<bool> UpdateAsync(string postId, PostEntity post)
+        public async Task<List<PostEntity>> GetWithLikesAsync(int quantity)
         {
-            throw new NotImplementedException();
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            return await context.Posts
+                    .Where(x => x.Likes > 0)
+                    .ToListAsync()
+                    .ConfigureAwait(false);
+        }
+
+        public async Task<bool> UpdateAsync(Guid postId, PostEntity post)
+        {
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            var persistedPost = await GetByIdAsync(postId);
+
+            if (persistedPost == null) return false;
+
+            context.Entry(persistedPost).CurrentValues.SetValues(post);
+            var result = await context.SaveChangesAsync();
+
+            return result > 0;
         }
     }
 }

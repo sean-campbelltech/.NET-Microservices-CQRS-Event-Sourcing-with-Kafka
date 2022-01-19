@@ -7,7 +7,7 @@ namespace Post.Query.Domain.Entities
     public class PostEntity
     {
         [Key]
-        public string PostId { get; set; }
+        public Guid PostId { get; set; }
         public string Author { get; set; }
         public DateTime DatePosted { get; set; }
         public string Message { get; set; }
