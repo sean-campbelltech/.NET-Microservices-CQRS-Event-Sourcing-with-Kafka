@@ -8,7 +8,7 @@ namespace Post.Common.Events
         {
         }
 
-        public MessageUpdatedEvent(Guid id, string message) : base(id)
+        public MessageUpdatedEvent(Guid id, int version, string message) : base(id, version)
         {
             this.Message = message;
         }

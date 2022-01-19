@@ -8,7 +8,7 @@ namespace Post.Common.Events
         {
         }
 
-        public CommentRemovedEvent(Guid id, int commentIndex) : base(id)
+        public CommentRemovedEvent(Guid id, int version, int commentIndex) : base(id, version)
         {
             this.CommentIndex = commentIndex;
         }
