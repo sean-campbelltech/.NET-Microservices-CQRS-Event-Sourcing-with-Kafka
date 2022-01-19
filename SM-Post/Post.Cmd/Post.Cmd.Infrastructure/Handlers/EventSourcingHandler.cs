@@ -17,16 +17,16 @@ namespace Post.Cmd.Infrastructure.Handlers
             _eventProducer = eventProducer;
         }
 
-        public void Save(AggregateRoot aggregate)
+        public async Task SaveAsync(AggregateRoot aggregate)
         {
-            _eventStore.SaveEvents(aggregate.Id, aggregate.GetUncommittedChanges(), aggregate.Version);
+            await _eventStore.SaveEventsAsync(aggregate.Id, aggregate.GetUncommittedChanges(), aggregate.Version);
             aggregate.MarkChangesAsCommitted();
         }
 
-        public PostAggregate GetById(Guid aggregateId)
+        public async Task<PostAggregate> GetByIdAsync(Guid aggregateId)
         {
             var aggregate = new PostAggregate();
-            var events = _eventStore.GetEvents(aggregateId);
+            var events = await _eventStore.GetEventsAsync(aggregateId);
 
             if (events?.Any() != true) return aggregate;
 
@@ -37,19 +37,19 @@ namespace Post.Cmd.Infrastructure.Handlers
             return aggregate;
         }
 
-        public void RepublishEvents()
+        public async Task RepublishEvents()
         {
-            var aggregateIds = _eventStore.GetAggregateIds();
+            var aggregateIds = await _eventStore.GetAggregateIdsAsync();
 
             if (aggregateIds?.Any() != true) return;
 
             foreach (var aggregateId in aggregateIds)
             {
-                var aggregate = GetById(aggregateId);
+                var aggregate = await GetByIdAsync(aggregateId);
 
                 if (aggregate == null || !aggregate.Active) continue;
 
-                var events = _eventStore.GetEvents(aggregateId);
+                var events = await _eventStore.GetEventsAsync(aggregateId);
 
                 foreach (var @event in events)
                 {

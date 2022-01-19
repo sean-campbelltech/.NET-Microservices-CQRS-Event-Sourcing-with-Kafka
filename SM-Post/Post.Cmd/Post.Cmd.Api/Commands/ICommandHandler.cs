@@ -2,12 +2,12 @@ namespace Post.Cmd.Api.Commands
 {
     public interface ICommandHandler
     {
-        void Handle(NewPostCommand command);
-        void Handle(EditMessageCommand command);
-        void Handle(LikePostCommand command);
-        void Handle(AddCommentCommand command);
-        void Handle(EditCommentCommand command);
-        void Handle(DeleteCommentCommand comment);
-        void Handle(DeletePostCommand command);
+        Task HandleAsync(NewPostCommand command);
+        Task HandleAsync(EditMessageCommand command);
+        Task HandleAsync(LikePostCommand command);
+        Task HandleAsync(AddCommentCommand command);
+        Task HandleAsync(EditCommentCommand command);
+        Task HandleAsync(DeleteCommentCommand comment);
+        Task HandleAsync(DeletePostCommand command);
     }
 }

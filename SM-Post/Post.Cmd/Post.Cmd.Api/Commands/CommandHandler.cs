@@ -12,59 +12,59 @@ namespace Post.Cmd.Api.Commands
             _eventSourcingHandler = eventSourcingHandler;
         }
 
-        public void Handle(NewPostCommand command)
+        public async Task HandleAsync(NewPostCommand command)
         {
             var aggregate = new PostAggregate(command.Id, command.Author, command.Message);
 
-            _eventSourcingHandler.Save(aggregate);
+            await _eventSourcingHandler.SaveAsync(aggregate);
         }
 
-        public void Handle(EditMessageCommand command)
+        public async Task HandleAsync(EditMessageCommand command)
         {
-            var aggregate = _eventSourcingHandler.GetById(command.Id);
+            var aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
             aggregate.EditMessage(command.Message);
 
-            _eventSourcingHandler.Save(aggregate);
+            await _eventSourcingHandler.SaveAsync(aggregate);
         }
 
-        public void Handle(LikePostCommand command)
+        public async Task HandleAsync(LikePostCommand command)
         {
-            var aggregate = _eventSourcingHandler.GetById(command.Id);
+            var aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
             aggregate.LikePost();
 
-            _eventSourcingHandler.Save(aggregate);
+            await _eventSourcingHandler.SaveAsync(aggregate);
         }
 
-        public void Handle(AddCommentCommand command)
+        public async Task HandleAsync(AddCommentCommand command)
         {
-            var aggregate = _eventSourcingHandler.GetById(command.Id);
+            var aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
             aggregate.AddComment(command.Comment, command.Username);
 
-            _eventSourcingHandler.Save(aggregate);
+            await _eventSourcingHandler.SaveAsync(aggregate);
         }
 
-        public void Handle(EditCommentCommand command)
+        public async Task HandleAsync(EditCommentCommand command)
         {
-            var aggregate = _eventSourcingHandler.GetById(command.Id);
+            var aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
             aggregate.EditComment(command.CommentIndex, command.Comment, command.Username);
 
-            _eventSourcingHandler.Save(aggregate);
+            await _eventSourcingHandler.SaveAsync(aggregate);
         }
 
-        public void Handle(DeleteCommentCommand command)
+        public async Task HandleAsync(DeleteCommentCommand command)
         {
-            var aggregate = _eventSourcingHandler.GetById(command.Id);
+            var aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
             aggregate.DeleteComment(command.CommentIndex, command.Username);
 
-            _eventSourcingHandler.Save(aggregate);
+            await _eventSourcingHandler.SaveAsync(aggregate);
         }
 
-        public void Handle(DeletePostCommand command)
+        public async Task HandleAsync(DeletePostCommand command)
         {
-            var aggregate = _eventSourcingHandler.GetById(command.Id);
+            var aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
             aggregate.DeletePost();
 
-            _eventSourcingHandler.Save(aggregate);
+            await _eventSourcingHandler.SaveAsync(aggregate);
         }
     }
 }
