@@ -1,5 +1,4 @@
 using CQRS.Core.Domain;
-using Post.Cmd.Api.Commands;
 using Post.Common.Events;
 
 namespace Post.Cmd.Domain.Aggregates
@@ -7,8 +6,7 @@ namespace Post.Cmd.Domain.Aggregates
     public class PostAggregate : AggregateRoot
     {
         private bool _active;
-        private int _likes;
-        private List<Tuple<string, string>> _comments = new List<Tuple<string, string>>();
+        private readonly List<Tuple<string, string>> _comments = new List<Tuple<string, string>>();
 
         public bool Active { get => _active; set => _active = value; }
 
@@ -16,13 +14,13 @@ namespace Post.Cmd.Domain.Aggregates
         {
         }
 
-        public PostAggregate(NewPostCommand command)
+        public PostAggregate(Guid id, string author, string message)
         {
             RaiseEvent(new PostCreatedEvent
             {
-                Id = command.Id,
-                Author = command.Author,
-                Message = command.Message,
+                Id = id,
+                Author = author,
+                Message = message,
                 DatePosted = DateTime.Now
             });
         }
@@ -73,7 +71,6 @@ namespace Post.Cmd.Domain.Aggregates
         public void Apply(PostLikedEvent @event)
         {
             _id = @event.Id;
-            _likes++;
         }
 
         public void AddComment(string comment, string username)
@@ -86,7 +83,7 @@ namespace Post.Cmd.Domain.Aggregates
             RaiseEvent(new CommentAddedEvent
             {
                 Id = _id,
-                Comment = username,
+                Comment = comment,
                 Username = username,
                 CommentDate = DateTime.Now
             });
@@ -119,7 +116,7 @@ namespace Post.Cmd.Domain.Aggregates
             {
                 Id = _id,
                 CommentIndex = index,
-                Comment = username,
+                Comment = comment,
                 Username = username,
                 EditDate = DateTime.Now
             });
@@ -161,7 +158,7 @@ namespace Post.Cmd.Domain.Aggregates
             _comments.RemoveAt(@event.CommentIndex);
         }
 
-        public void DeleteComment()
+        public void DeletePost()
         {
             if (!_active)
             {

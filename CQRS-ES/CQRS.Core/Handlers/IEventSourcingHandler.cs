@@ -5,7 +5,7 @@ namespace CQRS.Core.Handlers
     public interface IEventSourcingHandler<T>
     {
         void Save(AggregateRoot aggregate);
-        T GetById(string id);
+        T GetById(Guid id);
         void RepublishEvents();
     }
 }

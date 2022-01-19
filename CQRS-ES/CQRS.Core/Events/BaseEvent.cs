@@ -8,8 +8,11 @@ namespace CQRS.Core.Events
         {
         }
 
-        protected BaseEvent(Guid id) : base(id)
+        protected BaseEvent(Guid id, int version) : base(id)
         {
+            this.Version = version;
         }
+
+        public int Version { get; set; }
     }
 }

@@ -1,6 +1,13 @@
+using CQRS.Core.Handlers;
+using Post.Cmd.Api.Commands;
+using Post.Cmd.Domain.Aggregates;
+using Post.Cmd.Infrastructure.Handlers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<IEventSourcingHandler<PostAggregate>, EventSourcingHandler>();
+builder.Services.AddScoped<ICommandHandler, CommandHandler>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

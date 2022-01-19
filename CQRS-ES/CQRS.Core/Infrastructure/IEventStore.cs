@@ -4,8 +4,8 @@ namespace CQRS.Core.Infrastructure
 {
     public interface IEventStore
     {
-        void SaveEvents(string aggregateId, IEnumerable<BaseEvent> events, int expectedVersion);
-        List<BaseEvent> GetEvents(string aggregateId);
-        List<string> GetAggregateIds();
+        void SaveEvents(Guid aggregateId, IEnumerable<BaseEvent> events, int expectedVersion);
+        List<BaseEvent> GetEvents(Guid aggregateId);
+        List<Guid> GetAggregateIds();
     }
 }

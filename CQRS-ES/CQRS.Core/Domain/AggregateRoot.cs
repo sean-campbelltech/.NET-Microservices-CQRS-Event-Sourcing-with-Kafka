@@ -7,9 +7,14 @@ namespace CQRS.Core.Domain
         protected Guid _id;
         private readonly List<BaseEvent> _changes = new List<BaseEvent>();
 
-        public int Version { get; set; }
+        public Guid Id
+        {
+            get { return _id; }
+        }
 
-        public IEnumerable<BaseEvent> GetUncommitedChanges()
+        public int Version { get; set; } = -1;
+
+        public IEnumerable<BaseEvent> GetUncommittedChanges()
         {
             return _changes;
         }

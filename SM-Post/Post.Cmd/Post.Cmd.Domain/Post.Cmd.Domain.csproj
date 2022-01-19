@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\CQRS-ES\CQRS.Core\CQRS.Core.csproj" />
-    <ProjectReference Include="..\Post.Cmd.Api\Post.Cmd.Api.csproj" />
     <ProjectReference Include="..\..\Post.Common\Post.Common.csproj" />
   </ItemGroup>
 
