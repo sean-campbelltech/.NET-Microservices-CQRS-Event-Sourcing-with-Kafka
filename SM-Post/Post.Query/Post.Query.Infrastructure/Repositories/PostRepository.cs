@@ -51,7 +51,7 @@ namespace Post.Query.Infrastructure.Repositories
                     .ConfigureAwait(false);
         }
 
-        public async Task<List<PostEntity>> ListAllAsync(string author)
+        public async Task<List<PostEntity>> ListAllAsync()
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
             return await context.Posts.ToListAsync().ConfigureAwait(false);

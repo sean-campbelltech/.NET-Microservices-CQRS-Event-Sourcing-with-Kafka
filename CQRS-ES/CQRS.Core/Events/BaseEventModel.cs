@@ -1,6 +1,3 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
 namespace CQRS.Core.Events
 {
     public abstract class BaseEventModel
