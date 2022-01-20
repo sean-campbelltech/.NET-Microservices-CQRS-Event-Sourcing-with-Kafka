@@ -23,13 +23,13 @@ namespace Post.Cmd.Infrastructure.Dispatchers
             if (_routes.TryGetValue(typeof(BaseCommand), out List<Action<BaseCommand>>? handlers))
             {
                 if (handlers?.Count != 1)
-                    throw new InvalidOperationException("Cannot send command to more than one handler!");
+                    throw new IndexOutOfRangeException("Cannot send command to more than one handler!");
 
                 handlers[0](command);
             }
             else
             {
-                throw new InvalidOperationException("No command handler registered!");
+                throw new ArgumentNullException("No command handler registered!");
             }
         }
     }

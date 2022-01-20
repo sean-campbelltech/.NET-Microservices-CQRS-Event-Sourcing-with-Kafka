@@ -137,12 +137,12 @@ namespace Post.Cmd.Domain.Aggregates
 
             if ((index + 1) > _comments.Count)
             {
-                throw new InvalidCastException($"The post does not have a comment at index {index}.");
+                throw new InvalidOperationException($"The post does not have a comment at index {index}.");
             }
 
             if (_comments[index].Item2.Equals(username, StringComparison.CurrentCultureIgnoreCase))
             {
-                throw new InvalidCastException("You are not allowed to delete a comment of another user.");
+                throw new InvalidOperationException("You are not allowed to delete a comment of another user.");
             }
 
             RaiseEvent(new CommentRemovedEvent
