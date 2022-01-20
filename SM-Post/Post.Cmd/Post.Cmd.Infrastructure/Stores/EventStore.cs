@@ -4,6 +4,7 @@ using CQRS.Core.Exceptions;
 using CQRS.Core.Infrastructure;
 using CQRS.Core.Producers;
 using Post.Cmd.Domain.Aggregates;
+using Post.Cmd.Domain.Entities;
 
 namespace Post.Cmd.Infrastructure.Stores
 {
