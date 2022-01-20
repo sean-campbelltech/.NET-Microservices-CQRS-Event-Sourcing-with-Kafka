@@ -33,7 +33,7 @@ namespace Post.Query.Infrastructure.Repositories
             _ = await context.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public async Task<List<PostEntity>> GetByAuthorAsync(string author)
+        public async Task<List<PostEntity>> ListByAuthorAsync(string author)
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
             return await context.Posts
@@ -51,7 +51,13 @@ namespace Post.Query.Infrastructure.Repositories
                     .ConfigureAwait(false);
         }
 
-        public async Task<List<PostEntity>> GetWithCommentsAsync()
+        public async Task<List<PostEntity>> ListAllAsync(string author)
+        {
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            return await context.Posts.ToListAsync().ConfigureAwait(false);
+        }
+
+        public async Task<List<PostEntity>> ListWithCommentsAsync()
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
             return await context.Posts
@@ -60,7 +66,7 @@ namespace Post.Query.Infrastructure.Repositories
                     .ConfigureAwait(false);
         }
 
-        public async Task<List<PostEntity>> GetWithLikesAsync(int quantity)
+        public async Task<List<PostEntity>> ListWithLikesAsync(int quantity)
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
             return await context.Posts

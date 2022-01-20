@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using CQRS.Core.Queries;
 
 namespace Post.Query.Api.Queries
@@ -8,11 +9,12 @@ namespace Post.Query.Api.Queries
         {
         }
 
-        public FindPostByIdQuery(string id)
+        public FindPostByIdQuery(Guid id)
         {
             this.Id = id;
         }
 
-        public string Id { get; set; }
+        [Required]
+        public Guid Id { get; set; }
     }
 }

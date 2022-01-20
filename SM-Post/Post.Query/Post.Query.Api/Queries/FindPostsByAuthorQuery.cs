@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using CQRS.Core.Queries;
 
 namespace Post.Query.Api.Queries
@@ -13,6 +14,7 @@ namespace Post.Query.Api.Queries
             this.Author = author;
         }
 
+        [Required]
         public string Author { get; set; }
     }
 }
