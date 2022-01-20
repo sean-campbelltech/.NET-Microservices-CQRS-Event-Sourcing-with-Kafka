@@ -18,7 +18,7 @@ namespace Post.Cmd.Infrastructure.Dispatchers
             handlers.Add(x => handler((T)x));
         }
 
-        public void Send(BaseCommand command)
+        public Task Send(BaseCommand command)
         {
             if (_routes.TryGetValue(typeof(BaseCommand), out List<Func<BaseCommand, Task>>? handlers))
             {
@@ -29,8 +29,10 @@ namespace Post.Cmd.Infrastructure.Dispatchers
             }
             else
             {
-                throw new ArgumentNullException("No command handler registered!");
+                throw new ArgumentNullException(nameof(handlers), "No command handler registered!");
             }
+
+            return Task.CompletedTask;
         }
     }
 }

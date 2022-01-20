@@ -66,7 +66,7 @@ namespace Post.Cmd.Infrastructure.Stores
             var eventStream = await _eventStoreRepository.FindAllAsync();
 
             if (eventStream?.Any() != true)
-                throw new ArgumentNullException("Could not retrieve event stream from the event store!");
+                throw new ArgumentNullException(nameof(eventStream), "Could not retrieve event stream from the event store!");
 
             return eventStream.Select(x => x.AggregateIdentifier).Distinct().ToList();
         }
