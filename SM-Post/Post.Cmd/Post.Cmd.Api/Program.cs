@@ -1,11 +1,14 @@
 using CQRS.Core.Handlers;
+using CQRS.Core.Infrastructure;
 using Post.Cmd.Api.Commands;
 using Post.Cmd.Domain.Aggregates;
+using Post.Cmd.Infrastructure.Dispatchers;
 using Post.Cmd.Infrastructure.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<ICommandDispatcher, CommandDispatcher>();
 builder.Services.AddScoped<IEventSourcingHandler<PostAggregate>, EventSourcingHandler>();
 builder.Services.AddScoped<ICommandHandler, CommandHandler>();
 
