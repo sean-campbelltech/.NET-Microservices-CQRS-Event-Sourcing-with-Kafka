@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using CQRS.Core.Commands;
 
 namespace Post.Cmd.Api.Commands
@@ -14,7 +15,10 @@ namespace Post.Cmd.Api.Commands
             this.Message = message;
         }
 
+        [Required]
         public string Author { get; set; }
+
+        [Required]
         public string Message { get; set; }
     }
 }

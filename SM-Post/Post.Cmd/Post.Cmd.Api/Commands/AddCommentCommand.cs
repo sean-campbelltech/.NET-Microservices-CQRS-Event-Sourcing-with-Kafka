@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using CQRS.Core.Commands;
 
 namespace Post.Cmd.Api.Commands
@@ -14,7 +15,10 @@ namespace Post.Cmd.Api.Commands
             this.Username = username;
         }
 
+        [Required]
         public string Comment { get; set; }
+
+        [Required]
         public string Username { get; set; }
     }
 }

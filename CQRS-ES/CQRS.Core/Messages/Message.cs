@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace CQRS.Core.Messages
 {
     public class Message
@@ -11,6 +13,7 @@ namespace CQRS.Core.Messages
             this.Id = id;
         }
 
+        [Required]
         public Guid Id { get; set; }
     }
 }
