@@ -3,13 +3,13 @@ using CQRS.Core.Commands;
 
 namespace Post.Cmd.Api.Commands
 {
-    public class DeleteCommentCommand : BaseCommand
+    public class RemoveCommentCommand : BaseCommand
     {
-        public DeleteCommentCommand()
+        public RemoveCommentCommand()
         {
         }
 
-        public DeleteCommentCommand(Guid id, Guid commentId, string username) : base(id)
+        public RemoveCommentCommand(Guid id, Guid commentId, string username) : base(id)
         {
             this.CommentId = commentId;
             this.Username = username;

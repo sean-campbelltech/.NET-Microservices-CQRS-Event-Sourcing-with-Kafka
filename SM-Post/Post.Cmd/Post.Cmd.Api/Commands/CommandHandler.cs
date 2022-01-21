@@ -51,10 +51,10 @@ namespace Post.Cmd.Api.Commands
             await _eventSourcingHandler.SaveAsync(aggregate);
         }
 
-        public async Task HandleAsync(DeleteCommentCommand command)
+        public async Task HandleAsync(RemoveCommentCommand command)
         {
             var aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
-            aggregate.DeleteComment(command.CommentId, command.Username);
+            aggregate.RemoveComment(command.CommentId, command.Username);
 
             await _eventSourcingHandler.SaveAsync(aggregate);
         }

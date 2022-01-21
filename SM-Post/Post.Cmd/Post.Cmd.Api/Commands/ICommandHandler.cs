@@ -7,7 +7,7 @@ namespace Post.Cmd.Api.Commands
         Task HandleAsync(LikePostCommand command);
         Task HandleAsync(AddCommentCommand command);
         Task HandleAsync(EditCommentCommand command);
-        Task HandleAsync(DeleteCommentCommand comment);
+        Task HandleAsync(RemoveCommentCommand comment);
         Task HandleAsync(DeletePostCommand command);
     }
 }

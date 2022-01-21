@@ -100,12 +100,12 @@ namespace Post.Cmd.Domain.Aggregates
         {
             if (!_active)
             {
-                throw new InvalidOperationException("You cannot edit a comment of an inactive post.");
+                throw new InvalidOperationException("You cannot edit a comment on an inactive post.");
             }
 
             if (_comments[commentId].Item2.Equals(username, StringComparison.CurrentCultureIgnoreCase))
             {
-                throw new InvalidCastException("You are not allowed to edit the comment of another user.");
+                throw new InvalidCastException("You are not allowed to edit a comment that was made by another user.");
             }
 
             RaiseEvent(new CommentUpdatedEvent
@@ -124,16 +124,16 @@ namespace Post.Cmd.Domain.Aggregates
             _comments[@event.CommentId] = new Tuple<string, string>(@event.Comment, @event.Username);
         }
 
-        public void DeleteComment(Guid commentId, string username)
+        public void RemoveComment(Guid commentId, string username)
         {
             if (!_active)
             {
-                throw new InvalidOperationException("You cannot delete a comment of an inactive post.");
+                throw new InvalidOperationException("You cannot remove a comment on an inactive post.");
             }
 
             if (_comments[commentId].Item2.Equals(username, StringComparison.CurrentCultureIgnoreCase))
             {
-                throw new InvalidOperationException("You are not allowed to delete a comment of another user.");
+                throw new InvalidOperationException("You are not allowed to remove a comment that was made by another user.");
             }
 
             RaiseEvent(new CommentRemovedEvent
