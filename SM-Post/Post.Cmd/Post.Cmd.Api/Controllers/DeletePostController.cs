@@ -8,28 +8,27 @@ namespace Post.Cmd.Api.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class AddCommentController : ControllerBase
+    public class DeletePostController : ControllerBase
     {
-        private readonly ILogger<AddCommentController> _logger;
+        private readonly ILogger<DeletePostController> _logger;
         private readonly ICommandDispatcher _commandDispatcher;
 
-        public AddCommentController(ILogger<AddCommentController> logger, ICommandDispatcher commandDispatcher)
+        public DeletePostController(ILogger<DeletePostController> logger, ICommandDispatcher commandDispatcher)
         {
             _logger = logger;
             _commandDispatcher = commandDispatcher;
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> AddCommentAsync(Guid id, AddCommentCommand command)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeletePostAsync(Guid id)
         {
             try
             {
-                command.Id = id;
-                await _commandDispatcher.Send(command);
+                await _commandDispatcher.Send(new DeletePostCommand { Id = id });
 
                 return Ok(new BaseResponse
                 {
-                    Message = "Add comment request completed successfully!"
+                    Message = "Delete post request completed successfully!"
                 });
             }
             catch (InvalidOperationException ex)
@@ -52,8 +51,8 @@ namespace Post.Cmd.Api.Controllers
             }
             catch (Exception ex)
             {
-                var safeErrorMessage = $"Error while processing request to add a comment to post with ID - {id}.";
-                _logger.LogError(ex, safeErrorMessage, id);
+                var safeErrorMessage = $"Error while processing request to delete post with ID - {id}.";
+                _logger.LogError(ex, safeErrorMessage);
 
                 return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
                 {
