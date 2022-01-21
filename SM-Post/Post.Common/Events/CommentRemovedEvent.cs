@@ -8,11 +8,11 @@ namespace Post.Common.Events
         {
         }
 
-        public CommentRemovedEvent(Guid id, int version, int commentIndex) : base(id, version)
+        public CommentRemovedEvent(Guid id, int version, Guid commentId) : base(id, version)
         {
-            this.CommentIndex = commentIndex;
+            this.CommentId = commentId;
         }
 
-        public int CommentIndex { get; set; }
+        public Guid CommentId { get; set; }
     }
 }

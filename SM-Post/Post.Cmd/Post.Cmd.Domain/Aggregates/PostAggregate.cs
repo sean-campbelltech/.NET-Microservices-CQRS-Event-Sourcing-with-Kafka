@@ -6,7 +6,7 @@ namespace Post.Cmd.Domain.Aggregates
     public class PostAggregate : AggregateRoot
     {
         private bool _active;
-        private readonly List<Tuple<string, string>> _comments = new List<Tuple<string, string>>();
+        private readonly Dictionary<Guid, Tuple<string, string>> _comments = new Dictionary<Guid, Tuple<string, string>>();
 
         public bool Active { get => _active; set => _active = value; }
 
@@ -83,6 +83,7 @@ namespace Post.Cmd.Domain.Aggregates
             RaiseEvent(new CommentAddedEvent
             {
                 Id = _id,
+                CommentId = Guid.NewGuid(),
                 Comment = comment,
                 Username = username,
                 CommentDate = DateTime.Now
@@ -92,22 +93,17 @@ namespace Post.Cmd.Domain.Aggregates
         public void Apply(CommentAddedEvent @event)
         {
             _id = @event.Id;
-            _comments.Add(new Tuple<string, string>(@event.Comment, @event.Username));
+            _comments.Add(@event.CommentId, new Tuple<string, string>(@event.Comment, @event.Username));
         }
 
-        public void EditComment(int index, string comment, string username)
+        public void EditComment(Guid commentId, string comment, string username)
         {
             if (!_active)
             {
                 throw new InvalidOperationException("You cannot edit a comment of an inactive post.");
             }
 
-            if ((index + 1) > _comments.Count)
-            {
-                throw new InvalidCastException($"The post does not have a comment at index {index}.");
-            }
-
-            if (_comments[index].Item2.Equals(username, StringComparison.CurrentCultureIgnoreCase))
+            if (_comments[commentId].Item2.Equals(username, StringComparison.CurrentCultureIgnoreCase))
             {
                 throw new InvalidCastException("You are not allowed to edit the comment of another user.");
             }
@@ -115,7 +111,7 @@ namespace Post.Cmd.Domain.Aggregates
             RaiseEvent(new CommentUpdatedEvent
             {
                 Id = _id,
-                CommentIndex = index,
+                CommentId = commentId,
                 Comment = comment,
                 Username = username,
                 EditDate = DateTime.Now
@@ -125,22 +121,17 @@ namespace Post.Cmd.Domain.Aggregates
         public void Apply(CommentUpdatedEvent @event)
         {
             _id = @event.Id;
-            _comments[@event.CommentIndex] = new Tuple<string, string>(@event.Comment, @event.Username);
+            _comments[@event.CommentId] = new Tuple<string, string>(@event.Comment, @event.Username);
         }
 
-        public void DeleteComment(int index, string username)
+        public void DeleteComment(Guid commentId, string username)
         {
             if (!_active)
             {
                 throw new InvalidOperationException("You cannot delete a comment of an inactive post.");
             }
 
-            if ((index + 1) > _comments.Count)
-            {
-                throw new InvalidOperationException($"The post does not have a comment at index {index}.");
-            }
-
-            if (_comments[index].Item2.Equals(username, StringComparison.CurrentCultureIgnoreCase))
+            if (_comments[commentId].Item2.Equals(username, StringComparison.CurrentCultureIgnoreCase))
             {
                 throw new InvalidOperationException("You are not allowed to delete a comment of another user.");
             }
@@ -148,14 +139,14 @@ namespace Post.Cmd.Domain.Aggregates
             RaiseEvent(new CommentRemovedEvent
             {
                 Id = _id,
-                CommentIndex = index
+                CommentId = commentId
             });
         }
 
         public void Apply(CommentRemovedEvent @event)
         {
             _id = @event.Id;
-            _comments.RemoveAt(@event.CommentIndex);
+            _comments.Remove(@event.CommentId);
         }
 
         public void DeletePost()

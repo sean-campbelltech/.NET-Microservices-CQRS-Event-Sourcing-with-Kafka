@@ -9,14 +9,14 @@ namespace Post.Cmd.Api.Commands
         {
         }
 
-        public DeleteCommentCommand(Guid id, int commentIndex, string username) : base(id)
+        public DeleteCommentCommand(Guid id, Guid commentId, string username) : base(id)
         {
-            this.CommentIndex = commentIndex;
+            this.CommentId = commentId;
             this.Username = username;
         }
 
         [Required]
-        public int CommentIndex { get; set; }
+        public Guid CommentId { get; set; }
 
         [Required]
         public string Username { get; set; }

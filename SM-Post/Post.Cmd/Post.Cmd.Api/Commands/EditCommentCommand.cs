@@ -9,15 +9,15 @@ namespace Post.Cmd.Api.Commands
         {
         }
 
-        public EditCommentCommand(Guid id, int commentIndex, string comment, string username) : base(id)
+        public EditCommentCommand(Guid id, Guid commentIndex, string comment, string username) : base(id)
         {
-            this.CommentIndex = commentIndex;
+            this.CommentId = commentIndex;
             this.Comment = comment;
             this.Username = username;
         }
 
         [Required]
-        public int CommentIndex { get; set; }
+        public Guid CommentId { get; set; }
 
         [Required]
         public string Comment { get; set; }

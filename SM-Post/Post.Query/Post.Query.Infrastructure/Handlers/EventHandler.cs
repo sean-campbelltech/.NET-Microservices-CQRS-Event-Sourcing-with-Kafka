@@ -68,10 +68,10 @@ namespace Post.Query.Infrastructure.Handlers
 
             post.Comments.Add(new CommentEntity
             {
-                CommentId = Guid.NewGuid(),
-                Username = @event.Username,
+                CommentId = @event.CommentId,
                 CommentDate = @event.CommentDate,
                 Comment = @event.Comment,
+                Username = @event.Username,
                 Edited = false
             });
 
@@ -82,11 +82,16 @@ namespace Post.Query.Infrastructure.Handlers
         {
             var (postId, post) = await GetIdAndPostAsync(@event);
 
-            if (post == null) return;
+            if (post?.Comments?.Any() != true) return;
 
-            post.Comments[@event.CommentIndex].Comment = @event.Comment;
-            post.Comments[@event.CommentIndex].Edited = true;
-            post.Comments[@event.CommentIndex].CommentDate = @event.EditDate;
+            var comment = post.Comments.FirstOrDefault(x => x.CommentId == @event.CommentId);
+
+            if (comment == null) return;
+
+            var index = post.Comments.IndexOf(comment);
+            post.Comments[index].Comment = @event.Comment;
+            post.Comments[index].Edited = true;
+            post.Comments[index].CommentDate = @event.EditDate;
 
             await _postRepository.UpdateAsync(postId, post);
         }
@@ -95,9 +100,13 @@ namespace Post.Query.Infrastructure.Handlers
         {
             var (postId, post) = await GetIdAndPostAsync(@event);
 
-            if (post == null) return;
+            if (post?.Comments?.Any() != true) return;
 
-            post.Comments.RemoveAt(@event.CommentIndex);
+            var comment = post.Comments.FirstOrDefault(x => x.CommentId == @event.CommentId);
+
+            if (comment == null) return;
+
+            post.Comments.Remove(comment);
 
             await _postRepository.UpdateAsync(postId, post);
         }

@@ -20,11 +20,10 @@ namespace Post.Cmd.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> NewPost([FromBody] NewPostCommand command)
+        public async Task<ActionResult> NewPostAsync(NewPostCommand command)
         {
             var id = Guid.NewGuid();
             command.Id = id;
-
             try
             {
                 await _commandDispatcher.Send(command);
