@@ -4,16 +4,15 @@ using CQRS.Core.Exceptions;
 using CQRS.Core.Infrastructure;
 using CQRS.Core.Producers;
 using Post.Cmd.Domain.Aggregates;
-using Post.Cmd.Domain.Entities;
 
 namespace Post.Cmd.Infrastructure.Stores
 {
     public class EventStore : IEventStore
     {
-        private readonly IEventStoreRepository<EventEntity> _eventStoreRepository;
+        private readonly IEventStoreRepository _eventStoreRepository;
         private readonly IEventProducer _eventProducer;
 
-        public EventStore(IEventStoreRepository<EventEntity> eventStoreRepository, IEventProducer eventProducer)
+        public EventStore(IEventStoreRepository eventStoreRepository, IEventProducer eventProducer)
         {
             _eventStoreRepository = eventStoreRepository;
             _eventProducer = eventProducer;
@@ -43,7 +42,7 @@ namespace Post.Cmd.Infrastructure.Stores
                 version++;
                 @event.Version = version;
                 var eventType = @event.GetType().Name;
-                var eventEntity = new EventEntity
+                var eventModel = new EventModel
                 {
                     TimeStamp = DateTime.Now,
                     AggregateIdentifier = aggregateId,
@@ -53,11 +52,10 @@ namespace Post.Cmd.Infrastructure.Stores
                     EventData = @event
                 };
 
-                await _eventStoreRepository.SaveAsync(eventEntity);
+                await _eventStoreRepository.SaveAsync(eventModel);
                 await _eventProducer.ProduceAsync(eventType, @event);
             }
         }
-
 
         public async Task<List<Guid>> GetAggregateIdsAsync()
         {
