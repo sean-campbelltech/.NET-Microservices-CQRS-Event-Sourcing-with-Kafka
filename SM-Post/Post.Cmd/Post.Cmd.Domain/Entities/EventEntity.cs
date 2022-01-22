@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Post.Cmd.Domain.Entities
 {
-    public class EventModel : BaseEventModel
+    public class EventEntity : BaseEventEntity
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

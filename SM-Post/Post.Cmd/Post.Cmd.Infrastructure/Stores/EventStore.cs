@@ -10,10 +10,10 @@ namespace Post.Cmd.Infrastructure.Stores
 {
     public class EventStore : IEventStore
     {
-        private readonly IEventStoreRepository _eventStoreRepository;
+        private readonly IEventStoreRepository<EventEntity> _eventStoreRepository;
         private readonly IEventProducer _eventProducer;
 
-        public EventStore(IEventStoreRepository eventStoreRepository, IEventProducer eventProducer)
+        public EventStore(IEventStoreRepository<EventEntity> eventStoreRepository, IEventProducer eventProducer)
         {
             _eventStoreRepository = eventStoreRepository;
             _eventProducer = eventProducer;
@@ -43,7 +43,7 @@ namespace Post.Cmd.Infrastructure.Stores
                 version++;
                 @event.Version = version;
                 var eventType = @event.GetType().Name;
-                var eventModel = new EventModel
+                var eventEntity = new EventEntity
                 {
                     TimeStamp = DateTime.Now,
                     AggregateIdentifier = aggregateId,
@@ -53,12 +53,8 @@ namespace Post.Cmd.Infrastructure.Stores
                     EventData = @event
                 };
 
-                var persisted = await _eventStoreRepository.SaveAsync(eventModel);
-
-                if (persisted)
-                {
-                    await _eventProducer.ProduceAsync(eventType, @event);
-                }
+                await _eventStoreRepository.SaveAsync(eventEntity);
+                await _eventProducer.ProduceAsync(eventType, @event);
             }
         }
 

@@ -1,6 +1,6 @@
 namespace CQRS.Core.Events
 {
-    public abstract class BaseEventModel
+    public abstract class BaseEventEntity
     {
         public virtual string Id { get; set; }
         public DateTime TimeStamp { get; set; }
