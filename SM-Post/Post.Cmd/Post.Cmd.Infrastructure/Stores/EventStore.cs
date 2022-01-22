@@ -56,7 +56,9 @@ namespace Post.Cmd.Infrastructure.Stores
                 var persisted = await _eventStoreRepository.SaveAsync(eventModel);
 
                 if (persisted)
-                    _eventProducer.Produce(eventType, @event);
+                {
+                    await _eventProducer.ProduceAsync(eventType, @event);
+                }
             }
         }
 
