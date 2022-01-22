@@ -42,13 +42,13 @@ namespace Post.Query.Infrastructure.Repositories
                     .ConfigureAwait(false);
         }
 
-        public async Task<PostEntity> GetByIdAsync(Guid postId)
+        public async Task<PostEntity?> GetByIdAsync(Guid postId)
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
             return await context.Posts
                     .Where(x => x.PostId == postId)
                     .FirstOrDefaultAsync()
-                    .ConfigureAwait(false);
+                    .ConfigureAwait(false) ?? null;
         }
 
         public async Task<List<PostEntity>> ListAllAsync()

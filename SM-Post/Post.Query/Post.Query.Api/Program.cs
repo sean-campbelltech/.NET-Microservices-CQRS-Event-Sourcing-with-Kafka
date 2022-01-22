@@ -8,10 +8,15 @@ using Post.Query.Infrastructure.Repositories;
 using IEventHandler = Post.Query.Infrastructure.Handlers.IEventHandler;
 using EventHandler = Post.Query.Infrastructure.Handlers.EventHandler;
 using Confluent.Kafka;
+using Microsoft.EntityFrameworkCore;
+using Post.Query.Infrastructure.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+Action<DbContextOptionsBuilder> configureDbContext = o => o.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
+builder.Services.AddDbContext<DatabaseContext>(configureDbContext);
+builder.Services.AddSingleton<DatabaseContextFactory>(new DatabaseContextFactory(configureDbContext));
 builder.Services.AddScoped<IQueryDispatcher<PostEntity>, QueryDispatcher>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IQueryHandler, QueryHandler>();
