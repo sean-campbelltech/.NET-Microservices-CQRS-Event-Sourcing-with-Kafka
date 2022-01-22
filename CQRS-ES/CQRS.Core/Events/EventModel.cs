@@ -5,24 +5,6 @@ namespace CQRS.Core.Events
 {
     public class EventModel
     {
-        public EventModel(
-            string id,
-            DateTime timeStamp,
-            Guid aggregateIdentifier,
-            string aggregateType,
-            int version,
-            string eventType,
-            BaseEvent eventData)
-        {
-            Id = id;
-            TimeStamp = timeStamp;
-            AggregateIdentifier = aggregateIdentifier;
-            AggregateType = aggregateType;
-            Version = version;
-            EventType = eventType;
-            EventData = eventData;
-        }
-
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
