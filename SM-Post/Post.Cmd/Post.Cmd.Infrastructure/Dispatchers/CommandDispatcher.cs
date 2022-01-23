@@ -20,7 +20,7 @@ namespace Post.Cmd.Infrastructure.Dispatchers
 
         public Task Send(BaseCommand command)
         {
-            if (_routes.TryGetValue(typeof(BaseCommand), out List<Func<BaseCommand, Task>>? handlers))
+            if (_routes.TryGetValue(command.GetType(), out List<Func<BaseCommand, Task>>? handlers))
             {
                 if (handlers?.Count != 1)
                     throw new IndexOutOfRangeException("Cannot send command to more than one handler!");

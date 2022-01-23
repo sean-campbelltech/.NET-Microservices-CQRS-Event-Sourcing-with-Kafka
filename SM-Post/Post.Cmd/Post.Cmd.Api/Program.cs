@@ -25,19 +25,18 @@ builder.Services.AddScoped<IEventSourcingHandler<PostAggregate>, EventSourcingHa
 builder.Services.AddScoped<ICommandHandler, CommandHandler>();
 builder.Services.AddScoped<ICommandDispatcher, CommandDispatcher>();
 
-using (var scope = builder.Services.BuildServiceProvider().CreateScope())
-{
-    // register command handler methods;
-    var commandHandler = scope.ServiceProvider.GetRequiredService<ICommandHandler>();
-    var dispatcher = scope.ServiceProvider.GetRequiredService<ICommandDispatcher>();
-    dispatcher.RegisterHandler<NewPostCommand>(commandHandler.HandleAsync);
-    dispatcher.RegisterHandler<EditMessageCommand>(commandHandler.HandleAsync);
-    dispatcher.RegisterHandler<LikePostCommand>(commandHandler.HandleAsync);
-    dispatcher.RegisterHandler<AddCommentCommand>(commandHandler.HandleAsync);
-    dispatcher.RegisterHandler<EditCommentCommand>(commandHandler.HandleAsync);
-    dispatcher.RegisterHandler<RemoveCommentCommand>(commandHandler.HandleAsync);
-    dispatcher.RegisterHandler<DeletePostCommand>(commandHandler.HandleAsync);
-}
+// register command handler methods;
+var provider = builder.Services.BuildServiceProvider();
+var commandHandler = provider.GetRequiredService<ICommandHandler>();
+var dispatcher = new CommandDispatcher();
+dispatcher.RegisterHandler<NewPostCommand>(commandHandler.HandleAsync);
+dispatcher.RegisterHandler<EditMessageCommand>(commandHandler.HandleAsync);
+dispatcher.RegisterHandler<LikePostCommand>(commandHandler.HandleAsync);
+dispatcher.RegisterHandler<AddCommentCommand>(commandHandler.HandleAsync);
+dispatcher.RegisterHandler<EditCommentCommand>(commandHandler.HandleAsync);
+dispatcher.RegisterHandler<RemoveCommentCommand>(commandHandler.HandleAsync);
+dispatcher.RegisterHandler<DeletePostCommand>(commandHandler.HandleAsync);
+builder.Services.AddSingleton<ICommandDispatcher>(_ => dispatcher); // Has to be singleton, command handlers registered once on startup
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
