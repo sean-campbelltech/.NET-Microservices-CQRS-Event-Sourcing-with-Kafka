@@ -23,7 +23,6 @@ builder.Services.AddScoped<IEventProducer, EventProducer>();
 builder.Services.AddScoped<IEventStore, EventStore>();
 builder.Services.AddScoped<IEventSourcingHandler<PostAggregate>, EventSourcingHandler>();
 builder.Services.AddScoped<ICommandHandler, CommandHandler>();
-builder.Services.AddScoped<ICommandDispatcher, CommandDispatcher>();
 
 // register command handler methods;
 var commandHandler = builder.Services.BuildServiceProvider().GetRequiredService<ICommandHandler>();
