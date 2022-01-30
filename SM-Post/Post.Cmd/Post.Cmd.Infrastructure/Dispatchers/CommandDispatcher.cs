@@ -5,11 +5,11 @@ namespace Post.Cmd.Infrastructure.Dispatchers
 {
     public class CommandDispatcher : ICommandDispatcher
     {
-        private readonly Dictionary<Type, List<Func<BaseCommand, Task>>> _routes = new Dictionary<Type, List<Func<BaseCommand, Task>>>();
+        private readonly Dictionary<Type, List<Func<BaseCommand, Task>>> _routes = new();
 
         public void RegisterHandler<T>(Func<T, Task> handler) where T : BaseCommand
         {
-            if (!_routes.TryGetValue(typeof(T), out List<Func<BaseCommand, Task>>? handlers))
+            if (!_routes.TryGetValue(typeof(T), out List<Func<BaseCommand, Task>> handlers))
             {
                 handlers = new List<Func<BaseCommand, Task>>();
                 _routes.Add(typeof(T), handlers);
@@ -20,7 +20,7 @@ namespace Post.Cmd.Infrastructure.Dispatchers
 
         public Task Send(BaseCommand command)
         {
-            if (_routes.TryGetValue(command.GetType(), out List<Func<BaseCommand, Task>>? handlers))
+            if (_routes.TryGetValue(command.GetType(), out List<Func<BaseCommand, Task>> handlers))
             {
                 if (handlers?.Count != 1)
                     throw new IndexOutOfRangeException("Cannot send command to more than one handler!");

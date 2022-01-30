@@ -42,7 +42,7 @@ namespace Post.Query.Infrastructure.Repositories
                     .ConfigureAwait(false);
         }
 
-        public async Task<PostEntity?> GetByIdAsync(Guid postId)
+        public async Task<PostEntity> GetByIdAsync(Guid postId)
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
             return await context.Posts

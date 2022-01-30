@@ -11,12 +11,11 @@ namespace Post.Query.Infrastructure.DataAccess
 
         public void Seed()
         {
-            using (DatabaseContext context = _contextFactory.CreateDbContext())
-            {
-                // First delete db if it already exists, and then create it again
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
-            }
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+
+            // First delete db if it already exists, and then create it again
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
         }
     }
 }

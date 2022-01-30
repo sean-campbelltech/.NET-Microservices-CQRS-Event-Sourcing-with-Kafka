@@ -13,7 +13,7 @@ namespace Post.Query.Infrastructure.DataAccess
 
         public DatabaseContext CreateDbContext()
         {
-            DbContextOptionsBuilder<DatabaseContext> options = new DbContextOptionsBuilder<DatabaseContext>();
+            DbContextOptionsBuilder<DatabaseContext> options = new();
 
             _configureDbContext(options);
 
