@@ -8,12 +8,10 @@ namespace Post.Cmd.Infrastructure.Producers
     public class EventProducer : IEventProducer
     {
         private readonly ProducerConfig _config;
-        private readonly ISerializer<BaseEvent> _serializer;
 
-        public EventProducer(IOptions<ProducerConfig> config, ISerializer<BaseEvent> serializer)
+        public EventProducer(IOptions<ProducerConfig> config)
         {
             _config = config.Value;
-            _serializer = serializer;
         }
 
         public async Task ProduceAsync<T>(string topic, T @event) where T : BaseEvent

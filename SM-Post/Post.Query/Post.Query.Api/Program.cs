@@ -25,7 +25,6 @@ builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IQueryHandler, QueryHandler>();
 builder.Services.AddScoped<IEventHandler, EventHandler>();
 builder.Services.Configure<ConsumerConfig>(builder.Configuration.GetSection(nameof(ConsumerConfig)));
-builder.Services.AddScoped<IDeserializer<BaseEvent>, JsonDeserializer<BaseEvent>>();
 builder.Services.AddScoped<IEventConsumer, EventConsumer>();
 
 // register query handler methods;
