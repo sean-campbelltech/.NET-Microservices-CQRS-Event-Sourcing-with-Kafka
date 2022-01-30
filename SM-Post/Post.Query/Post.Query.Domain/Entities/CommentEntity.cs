@@ -14,6 +14,6 @@ namespace Post.Query.Domain.Entities
         public bool Edited { get; set; }
 
         [ForeignKey("PostId")]
-        public PostEntity PostEntity { get; set; }
+        public Guid PostId { get; set; }
     }
 }

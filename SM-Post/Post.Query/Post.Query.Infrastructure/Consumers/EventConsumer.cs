@@ -23,9 +23,9 @@ namespace Post.Query.Infrastructure.Consumers
 
         public async Task ConsumeAsync<T>(string topic) where T : BaseEvent
         {
-            using var consumer = new ConsumerBuilder<string, T>(_config)
+            using var consumer = new ConsumerBuilder<string, string>(_config)
                     .SetKeyDeserializer(Deserializers.Utf8)
-                    .SetValueDeserializer(new JsonDeserializer<T>())
+                    .SetValueDeserializer(Deserializers.Utf8)
                     .Build();
 
             consumer.Subscribe(topic);
@@ -39,15 +39,15 @@ namespace Post.Query.Infrastructure.Consumers
 
                     if (consumeResult?.Message == null) continue;
 
-                    var @event = consumeResult.Message.Value;
-                    var handlerMethod = _eventHandler.GetType().GetMethod("On");
+                    var @event = JsonSerializer.Deserialize(consumeResult.Message.Value, typeof(T));
+                    var handlerMethod = _eventHandler.GetType().GetMethod("On", new Type[] { @event.GetType() });
 
                     if (handlerMethod == null)
                     {
                         throw new ArgumentNullException(nameof(handlerMethod), "Could not find event handler method.");
                     }
 
-                    await (Task)handlerMethod.Invoke(_eventHandler, new object[] { consumeResult.Message.Value });
+                    await (Task)handlerMethod.Invoke(_eventHandler, new object[] { @event });
                     consumer.Commit(consumeResult);
                 }
             }

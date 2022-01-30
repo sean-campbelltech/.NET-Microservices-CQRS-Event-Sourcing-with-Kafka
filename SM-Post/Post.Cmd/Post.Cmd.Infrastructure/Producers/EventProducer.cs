@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Confluent.Kafka;
 using CQRS.Core.Events;
 using CQRS.Core.Producers;
@@ -16,15 +18,15 @@ namespace Post.Cmd.Infrastructure.Producers
 
         public async Task ProduceAsync<T>(string topic, T @event) where T : BaseEvent
         {
-            using var producer = new ProducerBuilder<string, T>(_config)
+            using var producer = new ProducerBuilder<string, string>(_config)
                     .SetKeySerializer(Serializers.Utf8)
-                    .SetValueSerializer(new JsonSerializer<T>())
+                    .SetValueSerializer(Serializers.Utf8)
                     .Build();
 
-            var eventMessage = new Message<string, T>
+            var eventMessage = new Message<string, string>
             {
                 Key = Guid.NewGuid().ToString(),
-                Value = @event
+                Value = JsonSerializer.Serialize(@event, @event.GetType())
             };
 
             var deliveryResult = await producer.ProduceAsync(topic, eventMessage);
@@ -33,6 +35,7 @@ namespace Post.Cmd.Infrastructure.Producers
             {
                 throw new Exception($"Could not produce {@event.GetType().Name} message to topic - {topic} due to the following reason: {deliveryResult.Message}!");
             }
+
         }
     }
 }
