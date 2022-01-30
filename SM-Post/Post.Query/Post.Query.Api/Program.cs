@@ -15,6 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 Action<DbContextOptionsBuilder> configureDbContext = o => o.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
+
+builder.Services.Configure<ProducerConfig>(builder.Configuration.GetSection(nameof(ProducerConfig)));
 builder.Services.AddDbContext<DatabaseContext>(configureDbContext);
 builder.Services.AddSingleton<DatabaseContextFactory>(new DatabaseContextFactory(configureDbContext));
 builder.Services.AddScoped<IQueryDispatcher<PostEntity>, QueryDispatcher>();
@@ -22,7 +24,17 @@ builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IQueryHandler, QueryHandler>();
 builder.Services.AddScoped<IEventHandler, EventHandler>();
 builder.Services.Configure<ConsumerConfig>(builder.Configuration.GetSection(nameof(ConsumerConfig)));
-builder.Services.AddSingleton<IEventConsumer, EventConsumer>();
+builder.Services.AddScoped<IEventConsumer, EventConsumer>();
+
+// register query handler methods;
+var queryHandler = builder.Services.BuildServiceProvider().GetRequiredService<IQueryHandler>();
+var dispatcher = new QueryDispatcher();
+dispatcher.RegisterHandler<FindAllPostsQuery>(queryHandler.HandleAsync);
+dispatcher.RegisterHandler<FindPostByIdQuery>(queryHandler.HandleAsync);
+dispatcher.RegisterHandler<FindPostsByAuthorQuery>(queryHandler.HandleAsync);
+dispatcher.RegisterHandler<FindPostsWithCommentsQuery>(queryHandler.HandleAsync);
+dispatcher.RegisterHandler<FindPostsWithLikesQuery>(queryHandler.HandleAsync);
+builder.Services.AddScoped<IQueryDispatcher<PostEntity>>(_ => dispatcher);
 
 builder.Services.AddControllers();
 builder.Services.AddHostedService<ConsumerHostedService>();
@@ -32,15 +44,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
-
-var queryHandler = app.Services.GetRequiredService<IQueryHandler>();
-var dispatcher = app.Services.GetRequiredService<IQueryDispatcher<PostEntity>>();
-dispatcher.RegisterHandler<FindAllPostsQuery>(queryHandler.HandleAsync);
-dispatcher.RegisterHandler<FindPostByIdQuery>(queryHandler.HandleAsync);
-dispatcher.RegisterHandler<FindPostsByAuthorQuery>(queryHandler.HandleAsync);
-dispatcher.RegisterHandler<FindPostsWithCommentsQuery>(queryHandler.HandleAsync);
-dispatcher.RegisterHandler<FindPostsWithLikesQuery>(queryHandler.HandleAsync);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
