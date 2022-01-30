@@ -4,15 +4,6 @@ namespace CQRS.Core.Events
 {
     public abstract class BaseEvent : Message
     {
-        protected BaseEvent()
-        {
-        }
-
-        protected BaseEvent(Guid id, int version) : base(id)
-        {
-            this.Version = version;
-        }
-
         public int Version { get; set; }
     }
 }

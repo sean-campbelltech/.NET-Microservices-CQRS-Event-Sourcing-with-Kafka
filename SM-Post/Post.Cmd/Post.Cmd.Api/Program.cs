@@ -1,5 +1,6 @@
 using Confluent.Kafka;
 using CQRS.Core.Domain;
+using CQRS.Core.Events;
 using CQRS.Core.Handlers;
 using CQRS.Core.Infrastructure;
 using CQRS.Core.Producers;
@@ -19,6 +20,7 @@ builder.Services.Configure<MongoDbConfig>(builder.Configuration.GetSection(nameo
 builder.Services.Configure<ProducerConfig>(builder.Configuration.GetSection(nameof(ProducerConfig)));
 
 builder.Services.AddScoped<IEventStoreRepository, EventStoreRepository>();
+builder.Services.AddScoped<ISerializer<BaseEvent>, JsonSerializer<BaseEvent>>();
 builder.Services.AddScoped<IEventProducer, EventProducer>();
 builder.Services.AddScoped<IEventStore, EventStore>();
 builder.Services.AddScoped<IEventSourcingHandler<PostAggregate>, EventSourcingHandler>();

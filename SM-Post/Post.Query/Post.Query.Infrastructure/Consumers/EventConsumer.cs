@@ -1,4 +1,6 @@
 using System.Reflection;
+using System.Text;
+using System.Text.Json;
 using Confluent.Kafka;
 using CQRS.Core.Events;
 using Microsoft.Extensions.Options;
@@ -11,7 +13,9 @@ namespace Post.Query.Infrastructure.Consumers
         private readonly ConsumerConfig _config;
         private readonly IEventHandler _eventHandler;
 
-        public EventConsumer(IOptions<ConsumerConfig> config, IEventHandler eventHandler)
+        public EventConsumer(
+            IOptions<ConsumerConfig> config,
+            IEventHandler eventHandler)
         {
             _config = config.Value;
             _eventHandler = eventHandler;
@@ -19,7 +23,11 @@ namespace Post.Query.Infrastructure.Consumers
 
         public async Task ConsumeAsync<T>(string topic) where T : BaseEvent
         {
-            using var consumer = new ConsumerBuilder<string, T>(_config).Build();
+            using var consumer = new ConsumerBuilder<string, T>(_config)
+                    .SetKeyDeserializer(Deserializers.Utf8)
+                    .SetValueDeserializer(new JsonDeserializer<T>())
+                    .Build();
+
             consumer.Subscribe(topic);
             var cancelToken = new CancellationTokenSource();
 

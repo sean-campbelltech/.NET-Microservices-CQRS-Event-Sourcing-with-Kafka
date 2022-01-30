@@ -8,16 +8,22 @@ namespace Post.Cmd.Infrastructure.Producers
     public class EventProducer : IEventProducer
     {
         private readonly ProducerConfig _config;
+        private readonly ISerializer<BaseEvent> _serializer;
 
-        public EventProducer(IOptions<ProducerConfig> config)
+        public EventProducer(IOptions<ProducerConfig> config, ISerializer<BaseEvent> serializer)
         {
             _config = config.Value;
+            _serializer = serializer;
         }
 
-        public async Task ProduceAsync(string topic, BaseEvent @event)
+        public async Task ProduceAsync<T>(string topic, T @event) where T : BaseEvent
         {
-            using var producer = new ProducerBuilder<string, BaseEvent>(_config).Build();
-            var eventMessage = new Message<string, BaseEvent>
+            using var producer = new ProducerBuilder<string, T>(_config)
+                    .SetKeySerializer(Serializers.Utf8)
+                    .SetValueSerializer(new JsonSerializer<T>())
+                    .Build();
+
+            var eventMessage = new Message<string, T>
             {
                 Key = Guid.NewGuid().ToString(),
                 Value = @event

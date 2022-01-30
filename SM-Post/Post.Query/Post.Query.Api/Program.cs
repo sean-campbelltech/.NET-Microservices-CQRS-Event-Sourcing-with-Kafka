@@ -10,6 +10,7 @@ using EventHandler = Post.Query.Infrastructure.Handlers.EventHandler;
 using Confluent.Kafka;
 using Microsoft.EntityFrameworkCore;
 using Post.Query.Infrastructure.DataAccess;
+using CQRS.Core.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,7 @@ builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IQueryHandler, QueryHandler>();
 builder.Services.AddScoped<IEventHandler, EventHandler>();
 builder.Services.Configure<ConsumerConfig>(builder.Configuration.GetSection(nameof(ConsumerConfig)));
+builder.Services.AddScoped<IDeserializer<BaseEvent>, JsonDeserializer<BaseEvent>>();
 builder.Services.AddScoped<IEventConsumer, EventConsumer>();
 
 // register query handler methods;

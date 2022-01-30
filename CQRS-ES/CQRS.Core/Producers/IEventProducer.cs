@@ -4,6 +4,6 @@ namespace CQRS.Core.Producers
 {
     public interface IEventProducer
     {
-        Task ProduceAsync(string topic, BaseEvent @event);
+        Task ProduceAsync<T>(string topic, T @event) where T : BaseEvent;
     }
 }

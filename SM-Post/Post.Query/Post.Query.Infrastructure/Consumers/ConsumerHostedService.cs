@@ -27,13 +27,13 @@ namespace Post.Query.Infrastructure.Consumers
             {
                 var eventConsumer = scope.ServiceProvider.GetRequiredService<IEventConsumer>();
 
-                Task.Run(() => eventConsumer.ConsumeAsync<PostCreatedEvent>(nameof(eventConsumer)), cancellationToken);
-                Task.Run(() => eventConsumer.ConsumeAsync<MessageUpdatedEvent>(nameof(eventConsumer)), cancellationToken);
-                Task.Run(() => eventConsumer.ConsumeAsync<PostLikedEvent>(nameof(eventConsumer)), cancellationToken);
-                Task.Run(() => eventConsumer.ConsumeAsync<CommentAddedEvent>(nameof(eventConsumer)), cancellationToken);
-                Task.Run(() => eventConsumer.ConsumeAsync<CommentUpdatedEvent>(nameof(eventConsumer)), cancellationToken);
-                Task.Run(() => eventConsumer.ConsumeAsync<CommentRemovedEvent>(nameof(eventConsumer)), cancellationToken);
-                Task.Run(() => eventConsumer.ConsumeAsync<PostRemovedEvent>(nameof(eventConsumer)), cancellationToken);
+                eventConsumer.ConsumeAsync<PostCreatedEvent>(nameof(PostCreatedEvent)).Wait(cancellationToken);
+                //     Task.Run(() => eventConsumer.ConsumeAsync<MessageUpdatedEvent>(nameof(MessageUpdatedEvent)), cancellationToken);
+                //     Task.Run(() => eventConsumer.ConsumeAsync<PostLikedEvent>(nameof(PostLikedEvent)), cancellationToken);
+                //     Task.Run(() => eventConsumer.ConsumeAsync<CommentAddedEvent>(nameof(CommentAddedEvent)), cancellationToken);
+                //     Task.Run(() => eventConsumer.ConsumeAsync<CommentUpdatedEvent>(nameof(CommentUpdatedEvent)), cancellationToken);
+                //     Task.Run(() => eventConsumer.ConsumeAsync<CommentRemovedEvent>(nameof(CommentRemovedEvent)), cancellationToken);
+                //     Task.Run(() => eventConsumer.ConsumeAsync<PostRemovedEvent>(nameof(PostRemovedEvent)), cancellationToken);
             }
 
             return Task.CompletedTask;
