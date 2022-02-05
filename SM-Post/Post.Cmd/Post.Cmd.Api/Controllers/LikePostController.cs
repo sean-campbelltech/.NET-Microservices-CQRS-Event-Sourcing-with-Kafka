@@ -24,7 +24,7 @@ namespace Post.Cmd.Api.Controllers
         {
             try
             {
-                await _commandDispatcher.Send(new LikePostCommand { Id = id });
+                await _commandDispatcher.SendAsync(new LikePostCommand { Id = id });
 
                 return Ok(new BaseResponse
                 {

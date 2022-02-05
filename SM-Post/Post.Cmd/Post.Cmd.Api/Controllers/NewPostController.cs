@@ -26,7 +26,7 @@ namespace Post.Cmd.Api.Controllers
             command.Id = id;
             try
             {
-                await _commandDispatcher.Send(command);
+                await _commandDispatcher.SendAsync(command);
 
                 return StatusCode(StatusCodes.Status201Created, new NewPostResponse
                 {

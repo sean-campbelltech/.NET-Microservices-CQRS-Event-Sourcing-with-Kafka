@@ -5,31 +5,27 @@ namespace Post.Cmd.Infrastructure.Dispatchers
 {
     public class CommandDispatcher : ICommandDispatcher
     {
-        private readonly Dictionary<Type, List<Func<BaseCommand, Task>>> _routes = new();
+        private readonly Dictionary<Type, Func<BaseCommand, Task>> _handlers = new();
 
         public void RegisterHandler<T>(Func<T, Task> handler) where T : BaseCommand
         {
-            if (!_routes.TryGetValue(typeof(T), out List<Func<BaseCommand, Task>> handlers))
+            if (_handlers.ContainsKey(typeof(T)))
             {
-                handlers = new List<Func<BaseCommand, Task>>();
-                _routes.Add(typeof(T), handlers);
+                throw new IndexOutOfRangeException($"You cannot register the same command handler twice!");
             }
 
-            handlers.Add(x => handler((T)x));
+            _handlers.Add(typeof(T), x => handler((T)x));
         }
 
-        public Task Send(BaseCommand command)
+        public Task SendAsync(BaseCommand command)
         {
-            if (_routes.TryGetValue(command.GetType(), out List<Func<BaseCommand, Task>> handlers))
+            if (_handlers.TryGetValue(command.GetType(), out Func<BaseCommand, Task> handler))
             {
-                if (handlers?.Count != 1)
-                    throw new IndexOutOfRangeException("Cannot send command to more than one handler!");
-
-                handlers[0](command);
+                handler(command);
             }
             else
             {
-                throw new ArgumentNullException(nameof(handlers), "No command handler registered!");
+                throw new ArgumentNullException(nameof(handler), "No command handler registered!");
             }
 
             return Task.CompletedTask;

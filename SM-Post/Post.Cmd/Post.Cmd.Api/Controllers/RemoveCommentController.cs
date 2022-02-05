@@ -25,7 +25,7 @@ namespace Post.Cmd.Api.Controllers
             try
             {
                 command.Id = id;
-                await _commandDispatcher.Send(command);
+                await _commandDispatcher.SendAsync(command);
 
                 return Ok(new BaseResponse
                 {

@@ -24,7 +24,7 @@ namespace Post.Cmd.Api.Controllers
         {
             try
             {
-                await _commandDispatcher.Send(new DeletePostCommand { Id = id });
+                await _commandDispatcher.SendAsync(new DeletePostCommand { Id = id });
 
                 return Ok(new BaseResponse
                 {
