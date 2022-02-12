@@ -20,6 +20,9 @@ Action<DbContextOptionsBuilder> configureDbContext = o => o.UseSqlServer(builder
 builder.Services.Configure<ProducerConfig>(builder.Configuration.GetSection(nameof(ProducerConfig)));
 builder.Services.AddDbContext<DatabaseContext>(configureDbContext);
 builder.Services.AddSingleton<DatabaseContextFactory>(new DatabaseContextFactory(configureDbContext));
+var dataContext = builder.Services.BuildServiceProvider().GetRequiredService<DatabaseContext>();
+dataContext.Database.EnsureCreated();
+
 builder.Services.AddScoped<IQueryDispatcher<PostEntity>, QueryDispatcher>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IQueryHandler, QueryHandler>();
