@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Confluent.Kafka;
+using CQRS.Core.Consumers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -27,13 +28,13 @@ namespace Post.Query.Infrastructure.Consumers
             {
                 var eventConsumer = scope.ServiceProvider.GetRequiredService<IEventConsumer>();
 
-                eventConsumer.ConsumeAsync<PostCreatedEvent>(nameof(PostCreatedEvent)).Wait(cancellationToken);
-                //     Task.Run(() => eventConsumer.ConsumeAsync<MessageUpdatedEvent>(nameof(MessageUpdatedEvent)), cancellationToken);
-                //     Task.Run(() => eventConsumer.ConsumeAsync<PostLikedEvent>(nameof(PostLikedEvent)), cancellationToken);
-                //     Task.Run(() => eventConsumer.ConsumeAsync<CommentAddedEvent>(nameof(CommentAddedEvent)), cancellationToken);
-                //     Task.Run(() => eventConsumer.ConsumeAsync<CommentUpdatedEvent>(nameof(CommentUpdatedEvent)), cancellationToken);
-                //     Task.Run(() => eventConsumer.ConsumeAsync<CommentRemovedEvent>(nameof(CommentRemovedEvent)), cancellationToken);
-                //     Task.Run(() => eventConsumer.ConsumeAsync<PostRemovedEvent>(nameof(PostRemovedEvent)), cancellationToken);
+                Task.Run(() => eventConsumer.ConsumeAsync<PostCreatedEvent>(nameof(PostCreatedEvent)), cancellationToken);
+                Task.Run(() => eventConsumer.ConsumeAsync<MessageUpdatedEvent>(nameof(MessageUpdatedEvent)), cancellationToken);
+                Task.Run(() => eventConsumer.ConsumeAsync<PostLikedEvent>(nameof(PostLikedEvent)), cancellationToken);
+                Task.Run(() => eventConsumer.ConsumeAsync<CommentAddedEvent>(nameof(CommentAddedEvent)), cancellationToken);
+                Task.Run(() => eventConsumer.ConsumeAsync<CommentUpdatedEvent>(nameof(CommentUpdatedEvent)), cancellationToken);
+                Task.Run(() => eventConsumer.ConsumeAsync<CommentRemovedEvent>(nameof(CommentRemovedEvent)), cancellationToken);
+                Task.Run(() => eventConsumer.ConsumeAsync<PostRemovedEvent>(nameof(PostRemovedEvent)), cancellationToken);
             }
 
             return Task.CompletedTask;

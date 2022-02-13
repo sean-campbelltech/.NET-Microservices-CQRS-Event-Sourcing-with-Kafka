@@ -10,7 +10,7 @@ using EventHandler = Post.Query.Infrastructure.Handlers.EventHandler;
 using Confluent.Kafka;
 using Microsoft.EntityFrameworkCore;
 using Post.Query.Infrastructure.DataAccess;
-using CQRS.Core.Events;
+using CQRS.Core.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 

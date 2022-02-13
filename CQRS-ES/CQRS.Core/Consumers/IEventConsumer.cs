@@ -1,6 +1,6 @@
 using CQRS.Core.Events;
 
-namespace Post.Query.Infrastructure.Consumers
+namespace CQRS.Core.Consumers
 {
     public interface IEventConsumer
     {
