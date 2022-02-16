@@ -78,11 +78,8 @@ namespace Post.Query.Infrastructure.Repositories
         public async Task UpdateAsync(Guid postId, PostEntity post)
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
-            var persistedPost = await GetByIdAsync(postId);
+            context.Posts.Update(post);
 
-            if (persistedPost == null) return;
-
-            context.Entry(persistedPost).CurrentValues.SetValues(post);
             _ = await context.SaveChangesAsync();
         }
     }
