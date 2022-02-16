@@ -25,6 +25,7 @@ dataContext.Database.EnsureCreated();
 
 builder.Services.AddScoped<IQueryDispatcher<PostEntity>, QueryDispatcher>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<IQueryHandler, QueryHandler>();
 builder.Services.AddScoped<IEventHandler, EventHandler>();
 builder.Services.Configure<ConsumerConfig>(builder.Configuration.GetSection(nameof(ConsumerConfig)));
