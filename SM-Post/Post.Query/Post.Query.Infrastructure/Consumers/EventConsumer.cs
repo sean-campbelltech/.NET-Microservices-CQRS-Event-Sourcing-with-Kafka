@@ -20,7 +20,7 @@ namespace Post.Query.Infrastructure.Consumers
             _eventHandler = eventHandler;
         }
 
-        public async Task ConsumeAsync<T>(string topic) where T : BaseEvent
+        public void Consume<T>(string topic) where T : BaseEvent
         {
             using var consumer = new ConsumerBuilder<string, string>(_config)
                     .SetKeyDeserializer(Deserializers.Utf8)
@@ -46,7 +46,7 @@ namespace Post.Query.Infrastructure.Consumers
                         throw new ArgumentNullException(nameof(handlerMethod), "Could not find event handler method.");
                     }
 
-                    await (Task)handlerMethod.Invoke(_eventHandler, new object[] { @event });
+                    handlerMethod.Invoke(_eventHandler, new object[] { @event });
                     consumer.Commit(consumeResult);
                 }
             }

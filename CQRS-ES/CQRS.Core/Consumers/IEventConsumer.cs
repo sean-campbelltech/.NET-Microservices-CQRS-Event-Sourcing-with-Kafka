@@ -4,6 +4,6 @@ namespace CQRS.Core.Consumers
 {
     public interface IEventConsumer
     {
-        Task ConsumeAsync<T>(string topic) where T : BaseEvent;
+        void Consume<T>(string topic) where T : BaseEvent;
     }
 }
