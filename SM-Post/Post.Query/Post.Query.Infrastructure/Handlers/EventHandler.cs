@@ -68,6 +68,7 @@ namespace Post.Query.Infrastructure.Handlers
 
             post.Comments.Add(new CommentEntity
             {
+                PostId = postId,
                 CommentId = @event.CommentId,
                 CommentDate = @event.CommentDate,
                 Comment = @event.Comment,
