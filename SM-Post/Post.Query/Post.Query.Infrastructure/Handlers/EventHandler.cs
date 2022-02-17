@@ -29,17 +29,9 @@ namespace Post.Query.Infrastructure.Handlers
             await _postRepository.CreateAsync(post);
         }
 
-        private async Task<Tuple<Guid, PostEntity>> GetIdAndPostAsync(BaseEvent @event)
-        {
-            var postId = @event.Id;
-            var post = await _postRepository.GetByIdAsync(postId);
-
-            return new Tuple<Guid, PostEntity>(postId, post);
-        }
-
         public async Task On(MessageUpdatedEvent @event)
         {
-            var (postId, post) = await GetIdAndPostAsync(@event);
+            var post = await _postRepository.GetByIdAsync(@event.Id);
 
             if (post == null) return;
 
@@ -49,7 +41,7 @@ namespace Post.Query.Infrastructure.Handlers
 
         public async Task On(PostLikedEvent @event)
         {
-            var (postId, post) = await GetIdAndPostAsync(@event);
+            var post = await _postRepository.GetByIdAsync(@event.Id);
 
             if (post == null) return;
 
@@ -61,7 +53,7 @@ namespace Post.Query.Infrastructure.Handlers
         {
             var comment = new CommentEntity
             {
-                PostId = @event.Id,
+                PostId = @event.CommentId,
                 CommentId = @event.CommentId,
                 CommentDate = @event.CommentDate,
                 Comment = @event.Comment,
@@ -74,35 +66,20 @@ namespace Post.Query.Infrastructure.Handlers
 
         public async Task On(CommentUpdatedEvent @event)
         {
-            var (postId, post) = await GetIdAndPostAsync(@event);
-
-            if (post?.Comments?.Any() != true) return;
-
-            var comment = post.Comments.FirstOrDefault(x => x.CommentId == @event.CommentId);
+            var comment = await _commentRepository.GetByIdAsync(@event.CommentId);
 
             if (comment == null) return;
 
-            var index = post.Comments.IndexOf(comment);
-            post.Comments[index].Comment = @event.Comment;
-            post.Comments[index].Edited = true;
-            post.Comments[index].CommentDate = @event.EditDate;
+            comment.Comment = @event.Comment;
+            comment.Edited = true;
+            comment.CommentDate = @event.EditDate;
 
-            await _postRepository.UpdateAsync(post);
+            await _commentRepository.UpdateAsync(comment);
         }
 
         public async Task On(CommentRemovedEvent @event)
         {
-            var (postId, post) = await GetIdAndPostAsync(@event);
-
-            if (post?.Comments?.Any() != true) return;
-
-            var comment = post.Comments.FirstOrDefault(x => x.CommentId == @event.CommentId);
-
-            if (comment == null) return;
-
-            post.Comments.Remove(comment);
-
-            await _postRepository.UpdateAsync(post);
+            await _commentRepository.DeleteAsync(@event.CommentId);
         }
 
         public async Task On(PostRemovedEvent @event)

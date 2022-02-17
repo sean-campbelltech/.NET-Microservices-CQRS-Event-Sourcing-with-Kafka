@@ -17,10 +17,8 @@ namespace Post.Query.Infrastructure.Repositories
         public async Task<CommentEntity> GetByIdAsync(Guid commentId)
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
-            return await context.Comments
-                    .Where(x => x.CommentId == commentId)
-                    .FirstOrDefaultAsync()
-                    .ConfigureAwait(false) ?? null;
+
+            return await context.Comments.FirstOrDefaultAsync(x => x.CommentId == commentId);
         }
 
         public async Task UpdateAsync(CommentEntity comment)
@@ -39,7 +37,7 @@ namespace Post.Query.Infrastructure.Repositories
             if (commentId == null) return;
 
             context.Comments.Remove(comment);
-            _ = await context.SaveChangesAsync().ConfigureAwait(false);
+            _ = await context.SaveChangesAsync();
         }
 
         public async Task CreateAsync(CommentEntity comment)
@@ -47,7 +45,7 @@ namespace Post.Query.Infrastructure.Repositories
             using DatabaseContext context = _contextFactory.CreateDbContext();
             context.Comments.Add(comment);
 
-            _ = await context.SaveChangesAsync().ConfigureAwait(false);
+            _ = await context.SaveChangesAsync();
         }
     }
 }

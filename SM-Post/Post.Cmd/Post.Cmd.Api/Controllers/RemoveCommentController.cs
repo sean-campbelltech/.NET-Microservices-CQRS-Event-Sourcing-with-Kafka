@@ -19,7 +19,7 @@ namespace Post.Cmd.Api.Controllers
             _commandDispatcher = commandDispatcher;
         }
 
-        [HttpPut("{id}")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult> RemoveCommentAsync(Guid id, RemoveCommentCommand command)
         {
             try
