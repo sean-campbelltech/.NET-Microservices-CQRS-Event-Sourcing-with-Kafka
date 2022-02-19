@@ -8,32 +8,36 @@ namespace Post.Query.Infrastructure.Repositories
 {
     public class PostRepository : IPostRepository
     {
-        private readonly DatabaseContext _context;
+        private readonly DatabaseContextFactory _contextFactory;
 
-        public PostRepository(DatabaseContext context)
+        public PostRepository(DatabaseContextFactory contextFactory)
         {
-            _context = context;
+            _contextFactory = contextFactory;
         }
 
         public async Task CreateAsync(PostEntity post)
         {
-            _context.Posts.Add(post);
-            _ = await _context.SaveChangesAsync();
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            context.Posts.Add(post);
+
+            _ = await context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Guid postId)
         {
+            using DatabaseContext context = _contextFactory.CreateDbContext();
             var post = await GetByIdAsync(postId);
 
             if (post == null) return;
 
-            _context.Posts.Remove(post);
-            _ = await _context.SaveChangesAsync();
+            context.Posts.Remove(post);
+            _ = await context.SaveChangesAsync();
         }
 
         public async Task<List<PostEntity>> ListByAuthorAsync(string author)
         {
-            return await _context.Posts.AsNoTracking()
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            return await context.Posts.AsNoTracking()
                     .Include(i => i.Comments).AsNoTracking()
                     .Where(x => x.Author.Equals(author))
                     .ToListAsync();
@@ -41,21 +45,24 @@ namespace Post.Query.Infrastructure.Repositories
 
         public async Task<PostEntity> GetByIdAsync(Guid postId)
         {
-            return await _context.Posts
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            return await context.Posts
                     .Include(i => i.Comments)
                     .FirstOrDefaultAsync(x => x.PostId == postId);
         }
 
         public async Task<List<PostEntity>> ListAllAsync()
         {
-            return await _context.Posts
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            return await context.Posts
                     .Include(i => i.Comments)
                     .ToListAsync();
         }
 
         public async Task<List<PostEntity>> ListWithCommentsAsync()
         {
-            return await _context.Posts.AsNoTracking()
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            return await context.Posts.AsNoTracking()
                     .Include(i => i.Comments).AsNoTracking()
                     .Where(x => x.Comments != null && x.Comments.Any())
                     .ToListAsync();
@@ -63,7 +70,8 @@ namespace Post.Query.Infrastructure.Repositories
 
         public async Task<List<PostEntity>> ListWithLikesAsync(int quantity)
         {
-            return await _context.Posts.AsNoTracking()
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            return await context.Posts.AsNoTracking()
                     .Include(i => i.Comments).AsNoTracking()
                     .Where(x => x.Likes > 0)
                     .ToListAsync();
@@ -71,8 +79,10 @@ namespace Post.Query.Infrastructure.Repositories
 
         public async Task UpdateAsync(PostEntity post)
         {
-            _context.Posts.Update(post);
-            _ = await _context.SaveChangesAsync();
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            context.Posts.Update(post);
+
+            _ = await context.SaveChangesAsync();
         }
     }
 }
