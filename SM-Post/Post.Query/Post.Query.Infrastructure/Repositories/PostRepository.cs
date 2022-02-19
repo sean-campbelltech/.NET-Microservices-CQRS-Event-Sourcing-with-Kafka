@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Post.Query.Domain.Entities;
 using Post.Query.Domain.Repositories;
 using Post.Query.Infrastructure.DataAccess;
@@ -7,36 +8,32 @@ namespace Post.Query.Infrastructure.Repositories
 {
     public class PostRepository : IPostRepository
     {
-        private readonly DatabaseContextFactory _contextFactory;
+        private readonly DatabaseContext _context;
 
-        public PostRepository(DatabaseContextFactory contextFactory)
+        public PostRepository(DatabaseContext context)
         {
-            _contextFactory = contextFactory;
+            _context = context;
         }
 
         public async Task CreateAsync(PostEntity post)
         {
-            using DatabaseContext context = _contextFactory.CreateDbContext();
-            context.Posts.Add(post);
-
-            _ = await context.SaveChangesAsync();
+            _context.Posts.Add(post);
+            _ = await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Guid postId)
         {
-            using DatabaseContext context = _contextFactory.CreateDbContext();
             var post = await GetByIdAsync(postId);
 
             if (post == null) return;
 
-            context.Posts.Remove(post);
-            _ = await context.SaveChangesAsync();
+            _context.Posts.Remove(post);
+            _ = await _context.SaveChangesAsync();
         }
 
         public async Task<List<PostEntity>> ListByAuthorAsync(string author)
         {
-            using DatabaseContext context = _contextFactory.CreateDbContext();
-            return await context.Posts.AsNoTracking()
+            return await _context.Posts.AsNoTracking()
                     .Include(i => i.Comments).AsNoTracking()
                     .Where(x => x.Author.Equals(author))
                     .ToListAsync();
@@ -44,24 +41,21 @@ namespace Post.Query.Infrastructure.Repositories
 
         public async Task<PostEntity> GetByIdAsync(Guid postId)
         {
-            using DatabaseContext context = _contextFactory.CreateDbContext();
-            return await context.Posts
+            return await _context.Posts
                     .Include(i => i.Comments)
                     .FirstOrDefaultAsync(x => x.PostId == postId);
         }
 
         public async Task<List<PostEntity>> ListAllAsync()
         {
-            using DatabaseContext context = _contextFactory.CreateDbContext();
-            return await context.Posts.AsNoTracking()
-                    .Include(i => i.Comments).AsNoTracking()
+            return await _context.Posts
+                    .Include(i => i.Comments)
                     .ToListAsync();
         }
 
         public async Task<List<PostEntity>> ListWithCommentsAsync()
         {
-            using DatabaseContext context = _contextFactory.CreateDbContext();
-            return await context.Posts.AsNoTracking()
+            return await _context.Posts.AsNoTracking()
                     .Include(i => i.Comments).AsNoTracking()
                     .Where(x => x.Comments != null && x.Comments.Any())
                     .ToListAsync();
@@ -69,8 +63,7 @@ namespace Post.Query.Infrastructure.Repositories
 
         public async Task<List<PostEntity>> ListWithLikesAsync(int quantity)
         {
-            using DatabaseContext context = _contextFactory.CreateDbContext();
-            return await context.Posts.AsNoTracking()
+            return await _context.Posts.AsNoTracking()
                     .Include(i => i.Comments).AsNoTracking()
                     .Where(x => x.Likes > 0)
                     .ToListAsync();
@@ -78,10 +71,8 @@ namespace Post.Query.Infrastructure.Repositories
 
         public async Task UpdateAsync(PostEntity post)
         {
-            using DatabaseContext context = _contextFactory.CreateDbContext();
-            context.Posts.Update(post);
-
-            _ = await context.SaveChangesAsync();
+            _context.Posts.Update(post);
+            _ = await _context.SaveChangesAsync();
         }
     }
 }

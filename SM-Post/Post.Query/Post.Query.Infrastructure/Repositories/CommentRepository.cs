@@ -7,45 +7,38 @@ namespace Post.Query.Infrastructure.Repositories
 {
     public class CommentRepository : ICommentRepository
     {
-        private readonly DatabaseContextFactory _contextFactory;
+        private readonly DatabaseContext _context;
 
-        public CommentRepository(DatabaseContextFactory contextFactory)
+        public CommentRepository(DatabaseContext context)
         {
-            _contextFactory = contextFactory;
+            _context = context;
         }
 
         public async Task<CommentEntity> GetByIdAsync(Guid commentId)
         {
-            using DatabaseContext context = _contextFactory.CreateDbContext();
-
-            return await context.Comments.FirstOrDefaultAsync(x => x.CommentId == commentId);
+            return await _context.Comments.FirstOrDefaultAsync(x => x.CommentId == commentId);
         }
 
         public async Task UpdateAsync(CommentEntity comment)
         {
-            using DatabaseContext context = _contextFactory.CreateDbContext();
-            context.Comments.Update(comment);
-
-            _ = await context.SaveChangesAsync();
+            _context.Comments.Update(comment);
+            _ = await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Guid commentId)
         {
-            using DatabaseContext context = _contextFactory.CreateDbContext();
             var comment = await GetByIdAsync(commentId);
 
             if (commentId == null) return;
 
-            context.Comments.Remove(comment);
-            _ = await context.SaveChangesAsync();
+            _context.Comments.Remove(comment);
+            _ = await _context.SaveChangesAsync();
         }
 
         public async Task CreateAsync(CommentEntity comment)
         {
-            using DatabaseContext context = _contextFactory.CreateDbContext();
-            context.Comments.Add(comment);
-
-            _ = await context.SaveChangesAsync();
+            _context.Comments.Add(comment);
+            _ = await _context.SaveChangesAsync();
         }
     }
 }
