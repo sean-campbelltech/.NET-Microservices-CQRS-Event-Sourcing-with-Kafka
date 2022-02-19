@@ -53,7 +53,7 @@ namespace Post.Query.Infrastructure.Handlers
         {
             var comment = new CommentEntity
             {
-                PostId = @event.CommentId,
+                PostId = @event.Id,
                 CommentId = @event.CommentId,
                 CommentDate = @event.CommentDate,
                 Comment = @event.Comment,
