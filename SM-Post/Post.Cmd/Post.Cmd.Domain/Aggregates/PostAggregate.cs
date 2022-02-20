@@ -6,6 +6,7 @@ namespace Post.Cmd.Domain.Aggregates
     public class PostAggregate : AggregateRoot
     {
         private bool _active;
+        private string _author;
         private readonly Dictionary<Guid, Tuple<string, string>> _comments = new();
 
         public bool Active { get => _active; set => _active = value; }
@@ -29,6 +30,7 @@ namespace Post.Cmd.Domain.Aggregates
         {
             _id = @event.Id;
             _active = true;
+            _author = @event.Author;
         }
 
         public void EditMessage(string message)
@@ -149,11 +151,16 @@ namespace Post.Cmd.Domain.Aggregates
             _comments.Remove(@event.CommentId);
         }
 
-        public void DeletePost()
+        public void DeletePost(string username)
         {
             if (!_active)
             {
                 throw new InvalidOperationException("The post has already been removed!");
+            }
+
+            if (!_author.Equals(username, StringComparison.CurrentCultureIgnoreCase))
+            {
+                throw new InvalidOperationException("You are not allowed to delete a post that was made by somebody else!");
             }
 
             RaiseEvent(new PostRemovedEvent { Id = _id });

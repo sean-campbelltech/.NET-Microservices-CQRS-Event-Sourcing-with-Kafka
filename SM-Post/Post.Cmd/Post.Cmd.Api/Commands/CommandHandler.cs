@@ -62,7 +62,7 @@ namespace Post.Cmd.Api.Commands
         public async Task HandleAsync(DeletePostCommand command)
         {
             var aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
-            aggregate.DeletePost();
+            aggregate.DeletePost(command.Username);
 
             await _eventSourcingHandler.SaveAsync(aggregate);
         }
