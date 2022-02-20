@@ -39,7 +39,7 @@ namespace Post.Query.Infrastructure.Repositories
             using DatabaseContext context = _contextFactory.CreateDbContext();
             return await context.Posts.AsNoTracking()
                     .Include(i => i.Comments).AsNoTracking()
-                    .Where(x => x.Author.Equals(author))
+                    .Where(x => x.Author.Contains(author))
                     .ToListAsync();
         }
 
@@ -54,8 +54,8 @@ namespace Post.Query.Infrastructure.Repositories
         public async Task<List<PostEntity>> ListAllAsync()
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
-            return await context.Posts
-                    .Include(i => i.Comments)
+            return await context.Posts.AsNoTracking()
+                    .Include(i => i.Comments).AsNoTracking()
                     .ToListAsync();
         }
 
@@ -73,7 +73,7 @@ namespace Post.Query.Infrastructure.Repositories
             using DatabaseContext context = _contextFactory.CreateDbContext();
             return await context.Posts.AsNoTracking()
                     .Include(i => i.Comments).AsNoTracking()
-                    .Where(x => x.Likes > 0)
+                    .Where(x => x.Likes >= quantity)
                     .ToListAsync();
         }
 

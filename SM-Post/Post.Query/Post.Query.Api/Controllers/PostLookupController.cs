@@ -67,7 +67,94 @@ namespace Post.Query.Api.Controllers
             }
             catch (Exception ex)
             {
-                const string safeErrorMessage = "Error while processing request to retrieve post by ID";
+                const string safeErrorMessage = "Error while processing request to retrieve post by ID!";
+                _logger.LogError(ex, safeErrorMessage);
+
+                return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
+                {
+                    Message = safeErrorMessage
+                });
+            }
+        }
+
+        [HttpGet("byAuthor/{author}")]
+        public async Task<ActionResult> GetPostByAuthor(string author)
+        {
+            try
+            {
+                var posts = await _queryDispatcher.Send(new FindPostsByAuthorQuery { Author = author });
+
+                if (posts == null || !posts.Any())
+                    return NoContent();
+
+                var count = posts.Count;
+                return Ok(new PostLookupResponse
+                {
+                    Posts = posts,
+                    Message = $"Successfully returned {count} post{(count > 1 ? "s" : string.Empty)}!"
+                });
+            }
+            catch (Exception ex)
+            {
+                const string safeErrorMessage = "Error while processing request to retrieve post by author!";
+                _logger.LogError(ex, safeErrorMessage);
+
+                return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
+                {
+                    Message = safeErrorMessage
+                });
+            }
+        }
+
+        [HttpGet("withComments")]
+        public async Task<ActionResult> GetPostsWithComments()
+        {
+            try
+            {
+                var posts = await _queryDispatcher.Send(new FindPostsWithCommentsQuery());
+
+                if (posts == null || !posts.Any())
+                    return NoContent();
+
+                var count = posts.Count;
+                return Ok(new PostLookupResponse
+                {
+                    Posts = posts,
+                    Message = $"Successfully returned {count} post{(count > 1 ? "s" : string.Empty)}!"
+                });
+            }
+            catch (Exception ex)
+            {
+                const string safeErrorMessage = "Error while processing request to retrieve all posts with comments!";
+                _logger.LogError(ex, safeErrorMessage);
+
+                return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
+                {
+                    Message = safeErrorMessage
+                });
+            }
+        }
+
+        [HttpGet("withLikes/{numberOfLikes}")]
+        public async Task<ActionResult> GetPostWithLikes(int numberOfLikes)
+        {
+            try
+            {
+                var posts = await _queryDispatcher.Send(new FindPostsWithLikesQuery { NumberOfLikes = numberOfLikes });
+
+                if (posts == null || !posts.Any())
+                    return NoContent();
+
+                var count = posts.Count;
+                return Ok(new PostLookupResponse
+                {
+                    Posts = posts,
+                    Message = $"Successfully returned {count} post{(count > 1 ? "s" : string.Empty)}!"
+                });
+            }
+            catch (Exception ex)
+            {
+                const string safeErrorMessage = "Error while processing request to retrieve posts with likes!";
                 _logger.LogError(ex, safeErrorMessage);
 
                 return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
