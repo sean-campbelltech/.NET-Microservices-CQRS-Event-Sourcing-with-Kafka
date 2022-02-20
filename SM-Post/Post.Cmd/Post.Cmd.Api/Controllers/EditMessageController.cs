@@ -52,12 +52,12 @@ namespace Post.Cmd.Api.Controllers
             }
             catch (Exception ex)
             {
-                var safeErrorMessage = $"Error while processing request to edit message of post with ID - {id}.";
-                _logger.LogError(ex, safeErrorMessage);
+                const string SAFE_ERROR_MESSAGE = $"Error while processing request to edit the message of a post!";
+                _logger.LogError(ex, SAFE_ERROR_MESSAGE);
 
                 return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
                 {
-                    Message = safeErrorMessage
+                    Message = SAFE_ERROR_MESSAGE
                 });
             }
         }

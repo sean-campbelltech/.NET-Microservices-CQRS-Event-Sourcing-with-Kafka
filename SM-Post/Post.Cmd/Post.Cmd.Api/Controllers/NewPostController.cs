@@ -45,12 +45,12 @@ namespace Post.Cmd.Api.Controllers
             }
             catch (Exception ex)
             {
-                var safeErrorMessage = $"Error while processing request to create a new post for ID - {id}.";
-                _logger.Log(LogLevel.Error, ex, safeErrorMessage);
+                const string SAFE_ERROR_MESSAGE = $"Error while processing request to create a new post!.";
+                _logger.Log(LogLevel.Error, ex, SAFE_ERROR_MESSAGE);
 
                 return StatusCode(StatusCodes.Status500InternalServerError, new NewPostResponse
                 {
-                    Message = safeErrorMessage,
+                    Message = SAFE_ERROR_MESSAGE,
                     Id = id
                 });
             }

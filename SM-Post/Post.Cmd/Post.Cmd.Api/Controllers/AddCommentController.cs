@@ -52,12 +52,12 @@ namespace Post.Cmd.Api.Controllers
             }
             catch (Exception ex)
             {
-                var safeErrorMessage = $"Error while processing request to add a comment to post with ID - {id}.";
-                _logger.LogError(ex, safeErrorMessage, id);
+                const string SAFE_ERROR_MESSAGE = $"Error while processing request to add a comment to a post!";
+                _logger.LogError(ex, SAFE_ERROR_MESSAGE, id);
 
                 return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
                 {
-                    Message = safeErrorMessage
+                    Message = SAFE_ERROR_MESSAGE
                 });
             }
         }

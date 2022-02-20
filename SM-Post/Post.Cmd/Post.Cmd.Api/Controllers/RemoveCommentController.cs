@@ -52,12 +52,12 @@ namespace Post.Cmd.Api.Controllers
             }
             catch (Exception ex)
             {
-                var safeErrorMessage = $"Error while processing request to remove a comment with ID - {command.CommentId} that was made on a post with ID - {id}.";
-                _logger.LogError(ex, safeErrorMessage, id);
+                const string SAFE_ERROR_MESSAGE = $"Error while processing request to remove a comment from a post!";
+                _logger.LogError(ex, SAFE_ERROR_MESSAGE, id);
 
                 return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
                 {
-                    Message = safeErrorMessage
+                    Message = SAFE_ERROR_MESSAGE
                 });
             }
         }
