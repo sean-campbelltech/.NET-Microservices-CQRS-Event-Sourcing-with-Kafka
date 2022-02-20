@@ -20,11 +20,12 @@ namespace Post.Cmd.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeletePostAsync(Guid id)
+        public async Task<ActionResult> DeletePostAsync(Guid id, DeletePostCommand command)
         {
             try
             {
-                await _commandDispatcher.SendAsync(new DeletePostCommand { Id = id });
+                command.Id = id;
+                await _commandDispatcher.SendAsync(command);
 
                 return Ok(new BaseResponse
                 {
