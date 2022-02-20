@@ -40,7 +40,7 @@ namespace Post.Cmd.Api.Controllers
 
                 return BadRequest(new BaseResponse
                 {
-                    Message = ex.ToString()
+                    Message = ex.Message
                 });
             }
             catch (Exception ex)

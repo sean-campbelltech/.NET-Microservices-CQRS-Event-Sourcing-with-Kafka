@@ -19,14 +19,14 @@ namespace Post.Query.Infrastructure.Dispatchers
             handlers.Add(x => handler((T)x));
         }
 
-        public Task<List<PostEntity>> Send(BaseQuery query)
+        public async Task<List<PostEntity>> Send(BaseQuery query)
         {
             if (_routes.TryGetValue(query.GetType(), out List<Func<BaseQuery, Task<List<PostEntity>>>> handlers))
             {
                 if (handlers?.Count != 1)
                     throw new IndexOutOfRangeException("Cannot send query to more than one handler!");
 
-                return handlers[0](query);
+                return await handlers[0](query);
             }
             else
             {

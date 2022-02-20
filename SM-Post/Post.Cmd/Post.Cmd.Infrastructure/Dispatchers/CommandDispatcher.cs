@@ -17,18 +17,16 @@ namespace Post.Cmd.Infrastructure.Dispatchers
             _handlers.Add(typeof(T), x => handler((T)x));
         }
 
-        public Task SendAsync(BaseCommand command)
+        public async Task SendAsync(BaseCommand command)
         {
             if (_handlers.TryGetValue(command.GetType(), out Func<BaseCommand, Task> handler))
             {
-                handler(command);
+                await handler(command);
             }
             else
             {
                 throw new ArgumentNullException(nameof(handler), "No command handler registered!");
             }
-
-            return Task.CompletedTask;
         }
     }
 }
