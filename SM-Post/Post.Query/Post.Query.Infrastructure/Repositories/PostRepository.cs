@@ -68,12 +68,12 @@ namespace Post.Query.Infrastructure.Repositories
                     .ToListAsync();
         }
 
-        public async Task<List<PostEntity>> ListWithLikesAsync(int quantity)
+        public async Task<List<PostEntity>> ListWithLikesAsync(int numberOfLikes)
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
             return await context.Posts.AsNoTracking()
                     .Include(i => i.Comments).AsNoTracking()
-                    .Where(x => x.Likes >= quantity)
+                    .Where(x => x.Likes >= numberOfLikes)
                     .ToListAsync();
         }
 
