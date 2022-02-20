@@ -82,6 +82,11 @@ namespace Post.Cmd.Domain.Aggregates
                 throw new InvalidOperationException("You cannot add a comment to an inactive post!");
             }
 
+            if (string.IsNullOrWhiteSpace(comment))
+            {
+                throw new InvalidOperationException($"The value of {nameof(comment)} cannot be null or empty. Please provide a valid {nameof(comment)}!");
+            }
+
             RaiseEvent(new CommentAddedEvent
             {
                 Id = _id,
