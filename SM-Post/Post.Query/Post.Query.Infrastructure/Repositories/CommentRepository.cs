@@ -34,7 +34,7 @@ namespace Post.Query.Infrastructure.Repositories
             using DatabaseContext context = _contextFactory.CreateDbContext();
             var comment = await GetByIdAsync(commentId);
 
-            if (commentId == null) return;
+            if (comment == null) return;
 
             context.Comments.Remove(comment);
             _ = await context.SaveChangesAsync();
