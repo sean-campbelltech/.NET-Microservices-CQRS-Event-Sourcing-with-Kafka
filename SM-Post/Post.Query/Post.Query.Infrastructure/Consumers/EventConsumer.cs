@@ -28,31 +28,23 @@ namespace Post.Query.Infrastructure.Consumers
                     .Build();
 
             consumer.Subscribe(topic);
-            var cancelToken = new CancellationTokenSource();
 
-            try
+            while (true)
             {
-                while (true)
+                var consumeResult = consumer.Consume();
+
+                if (consumeResult?.Message == null) continue;
+
+                var @event = JsonSerializer.Deserialize(consumeResult.Message.Value, typeof(T));
+                var handlerMethod = _eventHandler.GetType().GetMethod("On", new Type[] { @event.GetType() });
+
+                if (handlerMethod == null)
                 {
-                    var consumeResult = consumer.Consume(cancelToken.Token);
-
-                    if (consumeResult?.Message == null) continue;
-
-                    var @event = JsonSerializer.Deserialize(consumeResult.Message.Value, typeof(T));
-                    var handlerMethod = _eventHandler.GetType().GetMethod("On", new Type[] { @event.GetType() });
-
-                    if (handlerMethod == null)
-                    {
-                        throw new ArgumentNullException(nameof(handlerMethod), "Could not find event handler method.");
-                    }
-
-                    handlerMethod.Invoke(_eventHandler, new object[] { @event });
-                    consumer.Commit(consumeResult);
+                    throw new ArgumentNullException(nameof(handlerMethod), "Could not find event handler method.");
                 }
-            }
-            catch (OperationCanceledException)
-            {
-                consumer.Close();
+
+                handlerMethod.Invoke(_eventHandler, new object[] { @event });
+                consumer.Commit(consumeResult);
             }
         }
     }
