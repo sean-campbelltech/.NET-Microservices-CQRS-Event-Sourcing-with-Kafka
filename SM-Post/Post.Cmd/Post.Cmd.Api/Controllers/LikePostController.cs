@@ -33,8 +33,7 @@ namespace Post.Cmd.Api.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                _logger.LogWarning(ex, "Client made a bad request.");
-
+                _logger.Log(LogLevel.Warning, ex, "Client made a bad request!");
                 return BadRequest(new BaseResponse
                 {
                     Message = ex.Message
@@ -42,8 +41,7 @@ namespace Post.Cmd.Api.Controllers
             }
             catch (AggregateNotFoundException ex)
             {
-                _logger.LogWarning(ex, "Could not retrieve aggregate, client passed an incorrect post ID targetting the aggregate.");
-
+                _logger.Log(LogLevel.Warning, ex, "Could not retrieve aggregate, client passed an incorrect post ID targetting the aggregate!");
                 return BadRequest(new BaseResponse
                 {
                     Message = ex.Message
