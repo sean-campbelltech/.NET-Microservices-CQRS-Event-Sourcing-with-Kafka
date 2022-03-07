@@ -25,7 +25,7 @@ namespace Post.Query.Api.Controllers
         {
             try
             {
-                var posts = await _queryDispatcher.Send(new FindAllPostsQuery());
+                var posts = await _queryDispatcher.SendAsync(new FindAllPostsQuery());
 
                 if (posts == null || !posts.Any())
                     return NoContent();
@@ -54,7 +54,7 @@ namespace Post.Query.Api.Controllers
         {
             try
             {
-                var posts = await _queryDispatcher.Send(new FindPostByIdQuery { Id = postId });
+                var posts = await _queryDispatcher.SendAsync(new FindPostByIdQuery { Id = postId });
 
                 if (posts == null || !posts.Any())
                     return NoContent();
@@ -82,7 +82,7 @@ namespace Post.Query.Api.Controllers
         {
             try
             {
-                var posts = await _queryDispatcher.Send(new FindPostsByAuthorQuery { Author = author });
+                var posts = await _queryDispatcher.SendAsync(new FindPostsByAuthorQuery { Author = author });
 
                 if (posts == null || !posts.Any())
                     return NoContent();
@@ -111,7 +111,7 @@ namespace Post.Query.Api.Controllers
         {
             try
             {
-                var posts = await _queryDispatcher.Send(new FindPostsWithCommentsQuery());
+                var posts = await _queryDispatcher.SendAsync(new FindPostsWithCommentsQuery());
 
                 if (posts == null || !posts.Any())
                     return NoContent();
@@ -140,7 +140,7 @@ namespace Post.Query.Api.Controllers
         {
             try
             {
-                var posts = await _queryDispatcher.Send(new FindPostsWithLikesQuery { NumberOfLikes = numberOfLikes });
+                var posts = await _queryDispatcher.SendAsync(new FindPostsWithLikesQuery { NumberOfLikes = numberOfLikes });
 
                 if (posts == null || !posts.Any())
                     return NoContent();

@@ -6,31 +6,27 @@ namespace Post.Query.Infrastructure.Dispatchers
 {
     public class QueryDispatcher : IQueryDispatcher<PostEntity>
     {
-        private readonly Dictionary<Type, List<Func<BaseQuery, Task<List<PostEntity>>>>> _routes = new();
+        private readonly Dictionary<Type, Func<BaseQuery, Task<List<PostEntity>>>> _handlers = new();
 
         public void RegisterHandler<TQuery>(Func<TQuery, Task<List<PostEntity>>> handler) where TQuery : BaseQuery
         {
-            if (!_routes.TryGetValue(typeof(TQuery), out List<Func<BaseQuery, Task<List<PostEntity>>>> handlers))
+            if (_handlers.ContainsKey(typeof(TQuery)))
             {
-                handlers = new List<Func<BaseQuery, Task<List<PostEntity>>>>();
-                _routes.Add(typeof(TQuery), handlers);
+                throw new IndexOutOfRangeException("You cannot register the same query handler twice!");
             }
 
-            handlers.Add(x => handler((TQuery)x));
+            _handlers.Add(typeof(TQuery), x => handler((TQuery)x));
         }
 
-        public async Task<List<PostEntity>> Send(BaseQuery query)
+        public async Task<List<PostEntity>> SendAsync(BaseQuery query)
         {
-            if (_routes.TryGetValue(query.GetType(), out List<Func<BaseQuery, Task<List<PostEntity>>>> handlers))
+            if (_handlers.TryGetValue(query.GetType(), out Func<BaseQuery, Task<List<PostEntity>>> handler))
             {
-                if (handlers?.Count != 1)
-                    throw new IndexOutOfRangeException("Cannot send query to more than one handler!");
-
-                return await handlers[0](query);
+                return await handler(query);
             }
             else
             {
-                throw new ArgumentNullException(nameof(handlers), "No query handler registered!");
+                throw new ArgumentNullException(nameof(handler), "No query handler was registered!");
             }
         }
     }
