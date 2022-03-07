@@ -8,15 +8,15 @@ namespace Post.Query.Infrastructure.Dispatchers
     {
         private readonly Dictionary<Type, List<Func<BaseQuery, Task<List<PostEntity>>>>> _routes = new();
 
-        public void RegisterHandler<T>(Func<T, Task<List<PostEntity>>> handler) where T : BaseQuery
+        public void RegisterHandler<TQuery>(Func<TQuery, Task<List<PostEntity>>> handler) where TQuery : BaseQuery
         {
-            if (!_routes.TryGetValue(typeof(T), out List<Func<BaseQuery, Task<List<PostEntity>>>> handlers))
+            if (!_routes.TryGetValue(typeof(TQuery), out List<Func<BaseQuery, Task<List<PostEntity>>>> handlers))
             {
                 handlers = new List<Func<BaseQuery, Task<List<PostEntity>>>>();
-                _routes.Add(typeof(T), handlers);
+                _routes.Add(typeof(TQuery), handlers);
             }
 
-            handlers.Add(x => handler((T)x));
+            handlers.Add(x => handler((TQuery)x));
         }
 
         public async Task<List<PostEntity>> Send(BaseQuery query)

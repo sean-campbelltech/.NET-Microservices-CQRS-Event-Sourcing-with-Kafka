@@ -3,9 +3,9 @@ using CQRS.Core.Queries;
 
 namespace CQRS.Core.Infrastructure
 {
-    public interface IQueryDispatcher<U>
+    public interface IQueryDispatcher<TEntity>
     {
-        void RegisterHandler<T>(Func<T, Task<List<U>>> handler) where T : BaseQuery;
-        Task<List<U>> Send(BaseQuery query);
+        void RegisterHandler<TQuery>(Func<TQuery, Task<List<TEntity>>> handler) where TQuery : BaseQuery;
+        Task<List<TEntity>> Send(BaseQuery query);
     }
 }
