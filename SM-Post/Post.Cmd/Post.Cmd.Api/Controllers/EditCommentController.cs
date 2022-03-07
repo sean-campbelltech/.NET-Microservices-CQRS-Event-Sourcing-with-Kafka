@@ -51,7 +51,7 @@ namespace Post.Cmd.Api.Controllers
             catch (Exception ex)
             {
                 const string SAFE_ERROR_MESSAGE = $"Error while processing request to edit a comment on a post!";
-                _logger.LogError(ex, SAFE_ERROR_MESSAGE, id);
+                _logger.Log(LogLevel.Error, ex, SAFE_ERROR_MESSAGE, id);
 
                 return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
                 {
