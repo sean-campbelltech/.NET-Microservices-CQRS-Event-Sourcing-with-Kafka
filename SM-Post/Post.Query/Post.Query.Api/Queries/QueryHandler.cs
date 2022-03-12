@@ -21,6 +21,8 @@ namespace Post.Query.Api.Queries
         {
             var post = await _postRepository.GetByIdAsync(query.Id);
 
+            if (post == null) return null;
+
             return new List<PostEntity> { post };
         }
 
