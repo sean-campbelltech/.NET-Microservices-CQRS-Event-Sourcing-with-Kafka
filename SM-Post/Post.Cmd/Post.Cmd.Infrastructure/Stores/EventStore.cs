@@ -53,7 +53,7 @@ namespace Post.Cmd.Infrastructure.Stores
                 };
 
                 await _eventStoreRepository.SaveAsync(eventModel);
-                await _eventProducer.ProduceAsync(eventType, @event);
+                await _eventProducer.ProduceAsync("SocialMediaEvents", @event);
             }
         }
 

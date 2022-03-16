@@ -27,14 +27,7 @@ namespace Post.Query.Infrastructure.Consumers
             using (IServiceScope scope = _serviceProvider.CreateScope())
             {
                 var eventConsumer = scope.ServiceProvider.GetRequiredService<IEventConsumer>();
-
-                Task.Run(() => eventConsumer.Consume<PostCreatedEvent>(nameof(PostCreatedEvent)), cancellationToken);
-                Task.Run(() => eventConsumer.Consume<MessageUpdatedEvent>(nameof(MessageUpdatedEvent)), cancellationToken);
-                Task.Run(() => eventConsumer.Consume<PostLikedEvent>(nameof(PostLikedEvent)), cancellationToken);
-                Task.Run(() => eventConsumer.Consume<CommentAddedEvent>(nameof(CommentAddedEvent)), cancellationToken);
-                Task.Run(() => eventConsumer.Consume<CommentUpdatedEvent>(nameof(CommentUpdatedEvent)), cancellationToken);
-                Task.Run(() => eventConsumer.Consume<CommentRemovedEvent>(nameof(CommentRemovedEvent)), cancellationToken);
-                Task.Run(() => eventConsumer.Consume<PostRemovedEvent>(nameof(PostRemovedEvent)), cancellationToken);
+                Task.Run(() => eventConsumer.Consume("SocialMediaEvents"), cancellationToken);
             }
 
             return Task.CompletedTask;

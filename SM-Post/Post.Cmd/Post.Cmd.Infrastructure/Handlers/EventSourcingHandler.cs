@@ -52,7 +52,7 @@ namespace Post.Cmd.Infrastructure.Handlers
 
                 foreach (var @event in events)
                 {
-                    await _eventProducer.ProduceAsync(@event.GetType().Name, @event);
+                    await _eventProducer.ProduceAsync("SocialMediaEvents", @event);
                 }
             }
         }

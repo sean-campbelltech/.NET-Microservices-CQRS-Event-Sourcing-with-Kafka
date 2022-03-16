@@ -3,6 +3,7 @@ using Confluent.Kafka;
 using CQRS.Core.Consumers;
 using CQRS.Core.Events;
 using Microsoft.Extensions.Options;
+using Post.Query.Infrastructure.Converters;
 using Post.Query.Infrastructure.Handlers;
 
 namespace Post.Query.Infrastructure.Consumers
@@ -20,7 +21,7 @@ namespace Post.Query.Infrastructure.Consumers
             _eventHandler = eventHandler;
         }
 
-        public void Consume<T>(string topic) where T : BaseEvent
+        public void Consume(string topic)
         {
             using var consumer = new ConsumerBuilder<string, string>(_config)
                     .SetKeyDeserializer(Deserializers.Utf8)
@@ -35,7 +36,12 @@ namespace Post.Query.Infrastructure.Consumers
 
                 if (consumeResult?.Message == null) continue;
 
-                var @event = JsonSerializer.Deserialize(consumeResult.Message.Value, typeof(T));
+                var options = new JsonSerializerOptions
+                {
+                    Converters = { new EventJsonConverter() }
+                };
+
+                var @event = JsonSerializer.Deserialize<BaseEvent>(consumeResult.Message.Value, options);
                 var handlerMethod = _eventHandler.GetType().GetMethod("On", new Type[] { @event.GetType() });
 
                 if (handlerMethod == null)
