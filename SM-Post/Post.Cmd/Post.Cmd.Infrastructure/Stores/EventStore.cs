@@ -3,6 +3,7 @@ using CQRS.Core.Events;
 using CQRS.Core.Exceptions;
 using CQRS.Core.Infrastructure;
 using CQRS.Core.Producers;
+using Microsoft.Extensions.Options;
 using Post.Cmd.Domain.Aggregates;
 
 namespace Post.Cmd.Infrastructure.Stores
@@ -53,7 +54,9 @@ namespace Post.Cmd.Infrastructure.Stores
                 };
 
                 await _eventStoreRepository.SaveAsync(eventModel);
-                await _eventProducer.ProduceAsync("SocialMediaEvents", @event);
+
+                var topic = Environment.GetEnvironmentVariable("KAFKA_TOPIC");
+                await _eventProducer.ProduceAsync(topic, @event);
             }
         }
 

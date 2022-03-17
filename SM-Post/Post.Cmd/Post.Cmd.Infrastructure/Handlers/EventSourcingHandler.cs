@@ -2,6 +2,7 @@ using CQRS.Core.Domain;
 using CQRS.Core.Handlers;
 using CQRS.Core.Infrastructure;
 using CQRS.Core.Producers;
+using Microsoft.Extensions.Options;
 using Post.Cmd.Domain.Aggregates;
 
 namespace Post.Cmd.Infrastructure.Handlers
@@ -52,7 +53,8 @@ namespace Post.Cmd.Infrastructure.Handlers
 
                 foreach (var @event in events)
                 {
-                    await _eventProducer.ProduceAsync("SocialMediaEvents", @event);
+                    var topic = Environment.GetEnvironmentVariable("KAFKA_TOPIC");
+                    await _eventProducer.ProduceAsync(topic, @event);
                 }
             }
         }
