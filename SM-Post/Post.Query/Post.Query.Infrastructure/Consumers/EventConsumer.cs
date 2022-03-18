@@ -36,17 +36,13 @@ namespace Post.Query.Infrastructure.Consumers
 
                 if (consumeResult?.Message == null) continue;
 
-                var options = new JsonSerializerOptions
-                {
-                    Converters = { new EventJsonConverter() }
-                };
-
+                var options = new JsonSerializerOptions { Converters = { new EventJsonConverter() } };
                 var @event = JsonSerializer.Deserialize<BaseEvent>(consumeResult.Message.Value, options);
                 var handlerMethod = _eventHandler.GetType().GetMethod("On", new Type[] { @event.GetType() });
 
                 if (handlerMethod == null)
                 {
-                    throw new ArgumentNullException(nameof(handlerMethod), "Could not find event handler method.");
+                    throw new ArgumentNullException(nameof(handlerMethod), "Could not find event handler method!");
                 }
 
                 handlerMethod.Invoke(_eventHandler, new object[] { @event });

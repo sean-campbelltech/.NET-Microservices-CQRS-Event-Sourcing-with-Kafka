@@ -14,30 +14,30 @@ namespace Post.Query.Infrastructure.Converters
 
         public override BaseEvent Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (JsonDocument.TryParseValue(ref reader, out var doc))
+            if (!JsonDocument.TryParseValue(ref reader, out var doc))
             {
-                if (doc.RootElement.TryGetProperty("Type", out var type))
-                {
-                    var typeValue = type.GetString();
-                    var rootElement = doc.RootElement.GetRawText();
-
-                    return typeValue switch
-                    {
-                        nameof(PostCreatedEvent) => JsonSerializer.Deserialize<PostCreatedEvent>(rootElement, options),
-                        nameof(MessageUpdatedEvent) => JsonSerializer.Deserialize<MessageUpdatedEvent>(rootElement, options),
-                        nameof(PostLikedEvent) => JsonSerializer.Deserialize<PostLikedEvent>(rootElement, options),
-                        nameof(CommentAddedEvent) => JsonSerializer.Deserialize<CommentAddedEvent>(rootElement, options),
-                        nameof(CommentUpdatedEvent) => JsonSerializer.Deserialize<CommentUpdatedEvent>(rootElement, options),
-                        nameof(CommentRemovedEvent) => JsonSerializer.Deserialize<CommentRemovedEvent>(rootElement, options),
-                        nameof(PostRemovedEvent) => JsonSerializer.Deserialize<PostRemovedEvent>(rootElement, options),
-                        _ => throw new JsonException($"{typeValue} is not supported yet!")
-                    };
-                }
-
-                throw new JsonException("Could not find Type property!");
+                throw new JsonException($"Failed to parse {nameof(JsonDocument)}");
             }
 
-            throw new JsonException("Failed to parse JsonDocument");
+            if (!doc.RootElement.TryGetProperty("Type", out var type))
+            {
+                throw new JsonException("Could not detect the Type discriminator property!");
+            }
+
+            var typeDiscriminator = type.GetString();
+            var json = doc.RootElement.GetRawText();
+
+            return typeDiscriminator switch
+            {
+                nameof(PostCreatedEvent) => JsonSerializer.Deserialize<PostCreatedEvent>(json, options),
+                nameof(MessageUpdatedEvent) => JsonSerializer.Deserialize<MessageUpdatedEvent>(json, options),
+                nameof(PostLikedEvent) => JsonSerializer.Deserialize<PostLikedEvent>(json, options),
+                nameof(CommentAddedEvent) => JsonSerializer.Deserialize<CommentAddedEvent>(json, options),
+                nameof(CommentUpdatedEvent) => JsonSerializer.Deserialize<CommentUpdatedEvent>(json, options),
+                nameof(CommentRemovedEvent) => JsonSerializer.Deserialize<CommentRemovedEvent>(json, options),
+                nameof(PostRemovedEvent) => JsonSerializer.Deserialize<PostRemovedEvent>(json, options),
+                _ => throw new JsonException($"{typeDiscriminator} is not supported yet!")
+            };
         }
 
         public override void Write(Utf8JsonWriter writer, BaseEvent value, JsonSerializerOptions options)
