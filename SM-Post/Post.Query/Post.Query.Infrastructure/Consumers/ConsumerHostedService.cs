@@ -1,11 +1,7 @@
-using System.Text.Json;
-using Confluent.Kafka;
 using CQRS.Core.Consumers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Post.Common.Events;
 
 namespace Post.Query.Infrastructure.Consumers
 {
